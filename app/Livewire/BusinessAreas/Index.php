@@ -13,6 +13,7 @@ class Index extends Component
     public $search = '';
     public $filterPackage = '';
     public $filterState = '';
+    public $filterStatus = '';
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
 
@@ -35,6 +36,11 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function updatingFilterStatus()
+    {
+        $this->resetPage();
+    }
+
     public function sort($field)
     {
         if ($this->sortField === $field) {
@@ -50,6 +56,7 @@ class Index extends Component
         $this->search = '';
         $this->filterPackage = '';
         $this->filterState = '';
+        $this->filterStatus = '';
         $this->resetPage();
     }
 
@@ -63,14 +70,19 @@ class Index extends Component
     {
         $businessAreas = BusinessArea::query()
             ->when($this->search, function ($q) {
-                $q->where('business_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('code', 'like', '%' . $this->search . '%');
+                $q->where('business_name', 'ilike', '%' . $this->search . '%')
+                    ->orWhere('code', 'ilike', '%' . $this->search . '%')
+                    ->orWhere('package_name', 'ilike', '%' . $this->search . '%')
+                    ->orWhere('state_name', 'ilike', '%' . $this->search . '%');
             })
             ->when($this->filterPackage, function ($q) {
                 $q->where('package_name', $this->filterPackage);
             })
             ->when($this->filterState, function ($q) {
                 $q->where('state_name', $this->filterState);
+            })
+            ->when($this->filterStatus, function ($q) {
+                $q->where('status', $this->filterStatus);
             })
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(15);
@@ -88,10 +100,18 @@ class Index extends Component
             $states = BusinessArea::distinct()->pluck('state_name')->sort();
         }
 
+        // Calculate totals
+        $totalPackages = BusinessArea::distinct()->count('package_name');
+        $totalStates = BusinessArea::distinct()->count('state_name');
+        $totalBusinessAreas = BusinessArea::count();
+
         return view('livewire.business-areas.index', [
             'businessAreas' => $businessAreas,
             'packages' => $packages,
             'states' => $states,
+            'totalPackages' => $totalPackages,
+            'totalStates' => $totalStates,
+            'totalBusinessAreas' => $totalBusinessAreas,
         ]);
     }
 }

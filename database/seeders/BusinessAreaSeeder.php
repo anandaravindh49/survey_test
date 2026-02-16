@@ -18,6 +18,9 @@ class BusinessAreaSeeder extends Seeder
         }
 
         try {
+            // Truncate existing records
+            BusinessArea::truncate();
+
             $spreadsheet = IOFactory::load($filePath);
             $worksheet = $spreadsheet->getActiveSheet();
 

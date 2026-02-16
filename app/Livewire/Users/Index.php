@@ -11,6 +11,8 @@ class Index extends Component
     use WithPagination;
 
     public $search = '';
+    public $filterStatus = '';
+    public $filterRole = '';
     public $sortBy = 'name';
     public $sortDirection = 'asc';
 
@@ -18,6 +20,24 @@ class Index extends Component
 
     public function updatingSearch()
     {
+        $this->resetPage();
+    }
+
+    public function updatingFilterStatus()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFilterRole()
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters()
+    {
+        $this->search = '';
+        $this->filterStatus = '';
+        $this->filterRole = '';
         $this->resetPage();
     }
 
@@ -43,6 +63,12 @@ class Index extends Component
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                     ->orWhere('email', 'like', '%' . $this->search . '%');
+            })
+            ->when($this->filterStatus, function ($query) {
+                $query->where('status', $this->filterStatus);
+            })
+            ->when($this->filterRole, function ($query) {
+                $query->where('role', $this->filterRole);
             })
             ->orderBy($this->sortBy, $this->sortDirection)
             ->paginate(15);

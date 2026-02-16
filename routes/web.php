@@ -12,6 +12,10 @@ use App\Livewire\Districts\Index as DistrictsIndex;
 use App\Livewire\Districts\Show as DistrictsShow;
 use App\Livewire\Districts\Create as DistrictsCreate;
 use App\Livewire\Districts\Edit as DistrictsEdit;
+use App\Livewire\Blocks\Index as BlocksIndex;
+use App\Livewire\Blocks\Show as BlocksShow;
+use App\Livewire\Blocks\Create as BlocksCreate;
+use App\Livewire\Blocks\Edit as BlocksEdit;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -40,6 +44,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('districts/create', DistrictsCreate::class)->name('districts.create');
     Route::get('districts/{district}', DistrictsShow::class)->name('districts.show');
     Route::get('districts/{district}/edit', DistrictsEdit::class)->name('districts.edit');
+
+    // Blocks Routes
+    Route::get('blocks', BlocksIndex::class)->name('blocks.index');
+    Route::get('blocks/create', BlocksCreate::class)->name('blocks.create');
+    Route::get('blocks/{block}', BlocksShow::class)->name('blocks.show');
+    Route::get('blocks/{block}/edit', BlocksEdit::class)->name('blocks.edit');
 });
 
 require __DIR__.'/settings.php';

@@ -15,13 +15,49 @@
         </div>
     @endif
 
-    <div class="mb-6 flex gap-4">
-        <input
-            wire:model.debounce.300ms="search"
-            type="search"
-            placeholder="{{ __('Search users...') }}"
-            class="flex-1 border rounded px-3 py-2"
-        />
+    <!-- Filter Section -->
+    <div class="mb-6 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+        <div class="flex gap-2 items-center mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+            <button
+                wire:click="resetFilters"
+                class="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium transition-colors"
+            >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                {{ __('Reset') }}
+            </button>
+            <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('Filter by:') }}</span>
+        </div>
+        
+        <div class="flex gap-3 flex-wrap items-center">
+            <input
+                wire:model.live="search"
+                type="search"
+                placeholder="{{ __('search user...') }}"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            />
+            
+            <select
+                wire:model.live="filterStatus"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            >
+                <option value="">{{ __('All Status') }}</option>
+                <option value="ACTIVE">{{ __('Active') }}</option>
+                <option value="INACTIVE">{{ __('Inactive') }}</option>
+                <option value="SUSPENDED">{{ __('Suspended') }}</option>
+            </select>
+            
+            <select
+                wire:model.live="filterRole"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            >
+                <option value="">{{ __('All Roles') }}</option>
+                <option value="ADMIN">{{ __('Admin') }}</option>
+                <option value="USER">{{ __('User') }}</option>
+                <option value="NODAL">{{ __('Nodal Officer') }}</option>
+            </select>
+        </div>
     </div>
 
     <div class="bg-white rounded shadow overflow-x-auto">
@@ -77,7 +113,7 @@
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-right">{{ __('Action') }}</th>
+                    <th class="px-4 py-2 text-left">{{ __('Action') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">

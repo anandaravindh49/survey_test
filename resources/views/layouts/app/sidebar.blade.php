@@ -27,6 +27,9 @@
                     <flux:sidebar.item icon="map" :href="route('districts.index')" :current="request()->routeIs('districts.*')" wire:navigate>
                         {{ __('Districts') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="squares-2x2" :href="route('blocks.index')" :current="request()->routeIs('blocks.*')" wire:navigate>
+                        {{ __('Blocks') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 

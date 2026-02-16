@@ -27,5 +27,8 @@ class DatabaseSeeder extends Seeder
 
         // Seed districts from Excel
         $this->call(DistrictSeeder::class);
+
+        // Seed blocks from Excel
+        $this->call(BlockSeeder::class);
     }
 }

@@ -15,13 +15,99 @@
         </div>
     @endif
 
-    <div class="mb-6 flex gap-4">
-        <input
-            wire:model.debounce.300ms="search"
-            type="search"
-            placeholder="{{ __('Search districts...') }}"
-            class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
+    <!-- Stats Grid -->
+    <div class="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
+            <div>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total Package') }}</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalPackages }}</p>
+            </div>
+            <svg class="w-12 h-12 text-blue-200 dark:text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10m-4-4l4 2m-8-2l4-2"></path>
+            </svg>
+        </div>
+        
+        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
+            <div>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total States') }}</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalStates }}</p>
+            </div>
+            <svg class="w-12 h-12 text-emerald-200 dark:text-emerald-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+        </div>
+        
+        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
+            <div>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total Business area') }}</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalBusinessAreas }}</p>
+            </div>
+            <svg class="w-12 h-12 text-purple-200 dark:text-purple-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+        </div>
+        
+        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
+            <div>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total Districts') }}</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalDistricts }}</p>
+            </div>
+            <svg class="w-12 h-12 text-amber-200 dark:text-amber-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+        </div>
+    </div>
+    <div class="mb-6 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+        <div class="flex gap-2 items-center mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+            <button
+                wire:click="resetFilters"
+                class="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium transition-colors"
+            >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                {{ __('Reset') }}
+            </button>
+            <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('Filter by:') }}</span>
+        </div>
+        
+        <div class="flex gap-3 flex-wrap items-center">
+            <input
+                wire:model.live="search"
+                type="search"
+                placeholder="{{ __('search block...') }}"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            />
+            
+            <select
+                wire:model.live="filterPackage"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            >
+                <option value="">{{ __('All Packages') }}</option>
+                @foreach($packages as $package)
+                    <option value="{{ $package }}">{{ $package }}</option>
+                @endforeach
+            </select>
+            
+            <select
+                wire:model.live="filterState"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            >
+                <option value="">{{ __('All States') }}</option>
+                @foreach($states as $state)
+                    <option value="{{ $state }}">{{ $state }}</option>
+                @endforeach
+            </select>
+            
+            <select
+                wire:model.live="filterStatus"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            >
+                <option value="">{{ __('All Status') }}</option>
+                <option value="ACTIVE">{{ __('Active') }}</option>
+                <option value="INACTIVE">{{ __('Inactive') }}</option>
+            </select>
+        </div>
     </div>
 
     <div class="bg-white dark:bg-gray-900 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-x-auto">
@@ -58,7 +144,7 @@
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left">{{ __('Actions') }}</th>
+                    <th class="px-4 py-2 text-right">{{ __('Actions') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
