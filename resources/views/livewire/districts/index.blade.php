@@ -78,7 +78,7 @@
                             @endif
                         </td>
                         <td class="px-4 py-2 text-sm">
-                            <div class="flex gap-2">
+                            <div class="flex gap-2 justify-end">
                                 <a href="{{ route('districts.show', $district) }}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md hover:from-blue-600 hover:to-blue-700 text-xs font-semibold shadow-sm hover:shadow-md transition-all duration-200" title="View District">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
