@@ -24,19 +24,6 @@
         />
     </div>
 
-            <!-- Filter by State -->
-            <select 
-                wire:model.live="filterState"
-                class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm font-medium"
-                @if(!$filterPackage) disabled @endif
-            >
-                <option value="">{{ $filterPackage ? 'All States' : 'Select Package First' }}</option>
-                @foreach($states as $state)
-                    <option value="{{ $state }}">{{ $state }}</option>
-                @endforeach
-            </select>
-
-            <!-- Reset Button -->
     <div class="bg-white rounded shadow overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
