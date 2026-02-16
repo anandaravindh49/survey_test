@@ -77,7 +77,7 @@
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left">{{ __('Action') }}</th>
+                    <th class="px-4 py-2 text-right">{{ __('Action') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
