@@ -3,6 +3,7 @@
 namespace App\Livewire\Blocks;
 
 use App\Models\Block;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Edit extends Component
@@ -48,7 +49,7 @@ class Edit extends Component
             'block_name' => $this->block_name,
             'code' => $this->code,
             'status' => $this->status,
-            'updated_by' => auth()->id(),
+            'updated_by' => Auth::id(),
         ]);
 
         session()->flash('message', 'Block updated successfully.');
