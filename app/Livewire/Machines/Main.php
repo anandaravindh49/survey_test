@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Livewire\Blocks;
+namespace App\Livewire\Machines;
 
-use App\Models\Block;
+use App\Models\Machine;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class Index extends Component
+class Main extends Component
 {
     use WithPagination;
 
@@ -14,11 +14,12 @@ class Index extends Component
     public $filterPackage = '';
     public $filterState = '';
     public $filterDistrict = '';
+    public $filterBlock = '';
     public $filterStatus = '';
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
 
-    protected $listeners = ['blockDeleted' => '$refresh'];
+    protected $listeners = ['machineDeleted' => '$refresh'];
 
     public function updatingSearch()
     {
@@ -27,20 +28,26 @@ class Index extends Component
 
     public function updatingFilterPackage()
     {
-        // Reset state filter when package changes
         $this->filterState = '';
         $this->filterDistrict = '';
+        $this->filterBlock = '';
         $this->resetPage();
     }
 
     public function updatingFilterState()
     {
-        // Reset district filter when state changes
         $this->filterDistrict = '';
+        $this->filterBlock = '';
         $this->resetPage();
     }
 
     public function updatingFilterDistrict()
+    {
+        $this->filterBlock = '';
+        $this->resetPage();
+    }
+
+    public function updatingFilterBlock()
     {
         $this->resetPage();
     }
@@ -66,25 +73,28 @@ class Index extends Component
         $this->filterPackage = '';
         $this->filterState = '';
         $this->filterDistrict = '';
+        $this->filterBlock = '';
         $this->filterStatus = '';
         $this->resetPage();
     }
 
     public function delete($id)
     {
-        Block::find($id)->delete();
-        $this->dispatch('blockDeleted');
+        Machine::find($id)->delete();
+        $this->dispatch('machineDeleted');
     }
 
     public function render()
     {
-        $blocks = Block::query()
+        $machines = Machine::query()
             ->when($this->search, function ($q) {
-                $q->where('block_name', 'ilike', '%' . $this->search . '%')
+                $q->where('machine_name', 'ilike', '%' . $this->search . '%')
                     ->orWhere('code', 'ilike', '%' . $this->search . '%')
+                    ->orWhere('machine_type', 'ilike', '%' . $this->search . '%')
                     ->orWhere('package_name', 'ilike', '%' . $this->search . '%')
                     ->orWhere('state_name', 'ilike', '%' . $this->search . '%')
-                    ->orWhere('district_name', 'ilike', '%' . $this->search . '%');
+                    ->orWhere('district_name', 'ilike', '%' . $this->search . '%')
+                    ->orWhere('block_name', 'ilike', '%' . $this->search . '%');
             })
             ->when($this->filterPackage, function ($q) {
                 $q->where('package_name', $this->filterPackage);
@@ -95,50 +105,57 @@ class Index extends Component
             ->when($this->filterDistrict, function ($q) {
                 $q->where('district_name', $this->filterDistrict);
             })
+            ->when($this->filterBlock, function ($q) {
+                $q->where('block_name', $this->filterBlock);
+            })
             ->when($this->filterStatus, function ($q) {
                 $q->where('status', $this->filterStatus);
             })
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(15);
 
-        // Get unique packages for filter dropdown
-        $packages = Block::distinct()->pluck('package_name')->sort();
+        // Get unique values for filter dropdowns
+        $packages = Machine::distinct()->pluck('package_name')->filter()->sort();
         
-        // Get states based on selected package, or all states if no package selected
         if ($this->filterPackage) {
-            $states = Block::where('package_name', $this->filterPackage)
-                ->distinct()
-                ->pluck('state_name')
-                ->sort();
+            $states = Machine::where('package_name', $this->filterPackage)
+                ->distinct()->pluck('state_name')->filter()->sort();
         } else {
-            $states = Block::distinct()->pluck('state_name')->sort();
+            $states = Machine::distinct()->pluck('state_name')->filter()->sort();
         }
 
-        // Get districts based on selected state, or all districts if no state selected
         if ($this->filterState) {
-            $districts = Block::where('state_name', $this->filterState)
-                ->distinct()
-                ->pluck('district_name')
-                ->sort();
+            $districts = Machine::where('state_name', $this->filterState)
+                ->distinct()->pluck('district_name')->filter()->sort();
         } else {
-            $districts = Block::distinct()->pluck('district_name')->sort();
+            $districts = Machine::distinct()->pluck('district_name')->filter()->sort();
+        }
+
+        if ($this->filterDistrict) {
+            $blocks = Machine::where('district_name', $this->filterDistrict)
+                ->distinct()->pluck('block_name')->filter()->sort();
+        } else {
+            $blocks = Machine::distinct()->pluck('block_name')->filter()->sort();
         }
 
         // Calculate totals
-        $totalPackages = Block::distinct()->count('package_name');
-        $totalStates = Block::distinct()->count('state_name');
-        $totalDistricts = Block::distinct()->count('district_name');
-        $totalBlocks = Block::count();
+        $totalPackages = Machine::distinct()->count('package_name');
+        $totalStates = Machine::distinct()->count('state_name');
+        $totalDistricts = Machine::distinct()->count('district_name');
+        $totalBlocks = Machine::distinct()->count('block_name');
+        $totalMachines = Machine::count();
 
-        return view('livewire.blocks.index', [
-            'blocks' => $blocks,
+        return view('livewire.machines.main', [
+            'machines' => $machines,
             'packages' => $packages,
             'states' => $states,
             'districts' => $districts,
+            'blocks' => $blocks,
             'totalPackages' => $totalPackages,
             'totalStates' => $totalStates,
             'totalDistricts' => $totalDistricts,
             'totalBlocks' => $totalBlocks,
+            'totalMachines' => $totalMachines,
         ]);
     }
 }

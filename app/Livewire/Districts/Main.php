@@ -6,7 +6,7 @@ use App\Models\District;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class Index extends Component
+class Main extends Component
 {
     use WithPagination;
 
@@ -106,7 +106,7 @@ class Index extends Component
         $totalDistricts = District::count();
         $totalBusinessAreas = \App\Models\BusinessArea::count();
 
-        return view('livewire.districts.index', [
+        return view('livewire.districts.main', [
             'districts' => $districts,
             'packages' => $packages,
             'states' => $states,

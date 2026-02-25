@@ -6,7 +6,7 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class Index extends Component
+class Main extends Component
 {
     use WithPagination;
 
@@ -73,7 +73,7 @@ class Index extends Component
             ->orderBy($this->sortBy, $this->sortDirection)
             ->paginate(15);
 
-        return view('livewire.users.index', [
+        return view('livewire.users.main', [
             'users' => $users,
         ]);
     }

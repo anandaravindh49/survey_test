@@ -30,6 +30,12 @@
                     <flux:sidebar.item icon="squares-2x2" :href="route('blocks.index')" :current="request()->routeIs('blocks.*')" wire:navigate>
                         {{ __('Blocks') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="home" :href="route('gram-panchayats.index')" :current="request()->routeIs('gram-panchayats.*')" wire:navigate>
+                        {{ __('Gram Panchayats') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="cog-6-tooth" :href="route('machines.index')" :current="request()->routeIs('machines.*')" wire:navigate>
+                        {{ __('Machines') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 

@@ -1,11 +1,11 @@
 <div>
     <div class="mb-6 flex justify-between items-center">
-        <h1 class="text-2xl font-bold">{{ __('Blocks') }}</h1>
-        <a href="{{ route('blocks.create') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 font-medium">
+        <h1 class="text-2xl font-bold">{{ __('Business Areas') }}</h1>
+        <a href="{{ route('business-areas.create') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 dark:bg-zinc-700 text-white rounded hover:bg-zinc-900 dark:hover:bg-zinc-600 font-medium">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
-            {{ __('Add Block') }}
+            {{ __('Add Business Area') }}
         </a>
     </div>
 
@@ -16,7 +16,7 @@
     @endif
 
     <!-- Stats Grid -->
-    <div class="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
             <div>
                 <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total Package') }}</p>
@@ -39,26 +39,14 @@
         
         <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
             <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total Districts') }}</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalDistricts }}</p>
-            </div>
-            <svg class="w-12 h-12 text-purple-200 dark:text-purple-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-            </svg>
-        </div>
-        
-        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total Blocks') }}</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalBlocks }}</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total Bussinness area') }}</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalBusinessAreas }}</p>
             </div>
             <svg class="w-12 h-12 text-amber-200 dark:text-amber-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
             </svg>
         </div>
     </div>
-
-    <!-- Filter Section -->
     <div class="mb-6 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
         <div class="flex gap-2 items-center mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
             <button
@@ -77,7 +65,7 @@
             <input
                 wire:model.live="search"
                 type="search"
-                placeholder="{{ __('search block...') }}"
+                placeholder="{{ __('search business area...') }}"
                 class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
             />
             
@@ -98,16 +86,6 @@
                 <option value="">{{ __('All States') }}</option>
                 @foreach($states as $state)
                     <option value="{{ $state }}">{{ $state }}</option>
-                @endforeach
-            </select>
-
-            <select
-                wire:model.live="filterDistrict"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            >
-                <option value="">{{ __('All Districts') }}</option>
-                @foreach($districts as $district)
-                    <option value="{{ $district }}">{{ $district }}</option>
                 @endforeach
             </select>
             
@@ -138,15 +116,9 @@
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('district_name')">
-                        {{ __('District') }}
-                        @if ($sortField === 'district_name')
-                            <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
-                        @endif
-                    </th>
-                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('block_name')">
-                        {{ __('Block Name') }}
-                        @if ($sortField === 'block_name')
+                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('business_name')">
+                        {{ __('Business Name') }}
+                        @if ($sortField === 'business_name')
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
@@ -161,17 +133,16 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                @forelse($blocks as $block)
+                @forelse($businessAreas as $area)
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-                        <td class="px-4 py-2 text-sm">{{ $block->package_name }}</td>
-                        <td class="px-4 py-2 text-sm">{{ $block->state_name }}</td>
-                        <td class="px-4 py-2 text-sm">{{ $block->district_name }}</td>
-                        <td class="px-4 py-2 text-sm">{{ $block->block_name }}</td>
+                        <td class="px-4 py-2 text-sm">{{ $area->package_name }}</td>
+                        <td class="px-4 py-2 text-sm">{{ $area->state_name }}</td>
+                        <td class="px-4 py-2 text-sm">{{ $area->business_name }}</td>
                         <td class="px-4 py-2 text-sm">
-                            <span class="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">{{ $block->code }}</span>
+                            <span class="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">{{ $area->code }}</span>
                         </td>
                         <td class="px-4 py-2 text-sm">
-                            @if($block->status === 'ACTIVE')
+                            @if($area->status === 'ACTIVE')
                                 <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded font-semibold">ACTIVE</span>
                             @else
                                 <span class="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">INACTIVE</span>
@@ -179,39 +150,36 @@
                         </td>
                         <td class="px-4 py-2 text-sm">
                             <div class="flex gap-2 justify-end">
-                                <a href="{{ route('blocks.show', $block) }}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md hover:from-blue-600 hover:to-blue-700 text-xs font-semibold shadow-sm hover:shadow-md transition-all duration-200" title="View Block">
+                                <a href="{{ route('business-areas.show', $area) }}" class="inline-flex items-center px-2.5 py-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all duration-200" title="View Business Area">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
                                         <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
                                     </svg>
-                                    View
                                 </a>
-                                <a href="{{ route('blocks.edit', $block) }}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-md hover:from-amber-600 hover:to-amber-700 text-xs font-semibold shadow-sm hover:shadow-md transition-all duration-200" title="Edit Block">
+                                <a href="{{ route('business-areas.edit', $area) }}" class="inline-flex items-center px-2.5 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-all duration-200" title="Edit Business Area">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
                                     </svg>
-                                    Edit
                                 </a>
-                                <button wire:click="delete({{ $block->id }})" onclick="return confirm('Are you sure?')" class="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-md hover:from-red-600 hover:to-red-700 text-xs font-semibold shadow-sm hover:shadow-md transition-all duration-200" title="Delete Block">
+                                <button wire:click="delete({{ $area->id }})" wire:confirm="Are you sure you want to delete this business area? This action cannot be undone." class="inline-flex items-center px-2.5 py-1.5 text-rose-600 dark:text-rose-400 hover:text-rose-800 dark:hover:text-rose-300 transition-all duration-200" title="Delete Business Area">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                                     </svg>
-                                    Delete
                                 </button>
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">{{ __('No blocks found') }}</td>
+                        <td colspan="6" class="text-center py-8 text-gray-500">
+                            {{ __('No business areas found') }}
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
-    </div>
-
-    <!-- Pagination -->
-    <div class="mt-6">
-        {{ $blocks->links() }}
+        <div class="mt-6 px-4 py-4">
+            {{ $businessAreas->links() }}
+        </div>
     </div>
 </div>
