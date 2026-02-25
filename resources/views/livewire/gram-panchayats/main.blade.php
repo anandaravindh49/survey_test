@@ -81,7 +81,7 @@
                 </svg>
                 {{ __('Reset') }}
             </button>
-            <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('Filter by:') }}</span>
+            {{-- <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('Filter by:') }}</span> --}}
         </div>
         
         <div class="flex gap-3 flex-wrap items-center">
@@ -154,133 +154,102 @@
     </div>
 
     <!-- Table -->
-    <div class="bg-white dark:bg-zinc-800 shadow-sm rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-700">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-zinc-200 dark:divide-zinc-700">
-                <thead class="bg-zinc-50 dark:bg-zinc-900">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider cursor-pointer" wire:click="sort('state_name')">
-                            <div class="flex items-center">
-                                State
-                                @if($sortField === 'state_name')
-                                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+    <div class="bg-white dark:bg-gray-900 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-800">
+                <tr>
+                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('state_name')">
+                        {{ __('State') }}
+                        @if($sortField === 'state_name')
+                            <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </th>
+                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('business_area')">
+                        {{ __('Business Area') }}
+                        @if($sortField === 'business_area')
+                            <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </th>
+                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('district_name')">
+                        {{ __('District') }}
+                        @if($sortField === 'district_name')
+                            <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </th>
+                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('block_name')">
+                        {{ __('Block') }}
+                        @if($sortField === 'block_name')
+                            <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </th>
+                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('gp_name')">
+                        {{ __('GP Name') }}
+                        @if($sortField === 'gp_name')
+                            <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </th>
+                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('gp_code')">
+                        {{ __('GP Code') }}
+                        @if($sortField === 'gp_code')
+                            <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                        @endif
+                    </th>
+                    <th class="px-4 py-2 text-left">{{ __('GP Type') }}</th>
+                    <th class="px-4 py-2 text-left">{{ __('Status') }}</th>
+                    <th class="px-4 py-2 text-center">{{ __('Actions') }}</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                @forelse($gramPanchayats as $gp)
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <td class="px-4 py-2 text-sm">{{ $gp->state_name }}</td>
+                        <td class="px-4 py-2 text-sm">{{ $gp->business_area }}</td>
+                        <td class="px-4 py-2 text-sm">{{ $gp->district_name }}</td>
+                        <td class="px-4 py-2 text-sm">{{ $gp->block_name }}</td>
+                        <td class="px-4 py-2 text-sm">{{ $gp->gp_name }}</td>
+                        <td class="px-4 py-2 text-sm">
+                            <span class="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">{{ $gp->gp_code }}</span>
+                        </td>
+                        <td class="px-4 py-2 text-sm">{{ $gp->gp_type }}</td>
+                        <td class="px-4 py-2 text-sm">
+                            @if($gp->status === 'ACTIVE')
+                                <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded font-semibold">ACTIVE</span>
+                            @else
+                                <span class="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">INACTIVE</span>
+                            @endif
+                        </td>
+                        <td class="px-4 py-2 text-sm">
+                            <div class="flex gap-2 justify-center">
+                                <a href="{{ route('gram-panchayats.show', $gp) }}" class="inline-flex items-center px-2.5 py-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all duration-200" title="View Gram Panchayat">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
                                     </svg>
-                                @endif
-                            </div>
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider cursor-pointer" wire:click="sort('business_area')">
-                            <div class="flex items-center">
-                                Business Area
-                                @if($sortField === 'business_area')
-                                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+                                </a>
+                                <a href="{{ route('gram-panchayats.edit', $gp) }}" class="inline-flex items-center px-2.5 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-all duration-200" title="Edit Gram Panchayat">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
                                     </svg>
-                                @endif
-                            </div>
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider cursor-pointer" wire:click="sort('district_name')">
-                            <div class="flex items-center">
-                                District
-                                @if($sortField === 'district_name')
-                                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+                                </a>
+                                <button wire:click="delete({{ $gp->id }})" wire:confirm="Are you sure you want to delete this gram panchayat?" class="inline-flex items-center px-2.5 py-1.5 text-rose-600 dark:text-rose-400 hover:text-rose-800 dark:hover:text-rose-300 transition-all duration-200" title="Delete Gram Panchayat">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                                     </svg>
-                                @endif
+                                </button>
                             </div>
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider cursor-pointer" wire:click="sort('block_name')">
-                            <div class="flex items-center">
-                                Block
-                                @if($sortField === 'block_name')
-                                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
-                                    </svg>
-                                @endif
-                            </div>
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider cursor-pointer" wire:click="sort('gp_name')">
-                            <div class="flex items-center">
-                                GP Name
-                                @if($sortField === 'gp_name')
-                                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
-                                    </svg>
-                                @endif
-                            </div>
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider cursor-pointer" wire:click="sort('gp_code')">
-                            <div class="flex items-center">
-                                GP Code
-                                @if($sortField === 'gp_code')
-                                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
-                                    </svg>
-                                @endif
-                            </div>
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-                            GP Type
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-                            Status
-                        </th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-                            Actions
-                        </th>
+                        </td>
                     </tr>
-                </thead>
-                <tbody class="bg-white dark:bg-zinc-800 divide-y divide-zinc-200 dark:divide-zinc-700">
-                    @forelse($gramPanchayats as $gp)
-                        <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-700/50">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-zinc-900 dark:text-zinc-100">{{ $gp->state_name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-zinc-900 dark:text-zinc-100">{{ $gp->business_area }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-zinc-900 dark:text-zinc-100">{{ $gp->district_name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-zinc-900 dark:text-zinc-100">{{ $gp->block_name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-zinc-900 dark:text-zinc-100">{{ $gp->gp_name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400">{{ $gp->gp_code }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400">{{ $gp->gp_type }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $gp->status === 'ACTIVE' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400' }}">
-                                    {{ $gp->status }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex justify-end space-x-2">
-                                    <a href="{{ route('gram-panchayats.show', $gp) }}" class="inline-flex items-center px-2.5 py-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                        </svg>
-                                    </a>
-                                    <a href="{{ route('gram-panchayats.edit', $gp) }}" class="inline-flex items-center px-2.5 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                        </svg>
-                                    </a>
-                                    <button wire:click="delete({{ $gp->id }})" wire:confirm="Are you sure you want to delete this gram panchayat?" class="inline-flex items-center px-2.5 py-1.5 text-rose-600 dark:text-rose-400 hover:text-rose-800 dark:hover:text-rose-300 transition">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="9" class="px-6 py-4 text-center text-zinc-500 dark:text-zinc-400">
-                                No gram panchayats found.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                @empty
+                    <tr>
+                        <td colspan="9" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                            {{ __('No gram panchayats found') }}
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+        <div class="mt-6 px-4 py-4">
+            {{ $gramPanchayats->links() }}
         </div>
-
-        @if($gramPanchayats->hasPages())
-            <div class="px-6 py-4 border-t border-zinc-200 dark:border-zinc-700">
-                {{ $gramPanchayats->links() }}
-            </div>
-        @endif
     </div>
 </div>

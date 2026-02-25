@@ -1,105 +1,97 @@
 <div>
-    <div class="flex items-center justify-between mb-6">
-        <div>
-            <h1 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Create Gram Panchayat</h1>
-            <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Add a new gram panchayat to the system</p>
-        </div>
-        <a href="{{ route('gram-panchayats.index') }}" class="inline-flex items-center px-4 py-2 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-zinc-200 dark:hover:bg-zinc-600 transition">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            Back to List
+    <div class="mb-6 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ __('Create Gram Panchayat') }}</h1>
+        <a href="{{ route('gram-panchayats.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 font-medium">
+            {{ __('Back') }}
         </a>
     </div>
 
-    <div class="bg-white dark:bg-zinc-800 shadow-sm rounded-lg border border-zinc-200 dark:border-zinc-700">
-        <form wire:submit="save" class="p-6 space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="state_name" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">State *</label>
-                    <input wire:model="state_name" type="text" id="state_name" list="statesList" class="mt-1 block w-full border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <datalist id="statesList">
-                        @foreach($states as $state)
-                            <option value="{{ $state }}">
-                        @endforeach
-                    </datalist>
-                    @error('state_name') <span class="text-sm text-red-600 dark:text-red-400">{{ $message }}</span> @enderror
-                </div>
-
-                <div>
-                    <label for="business_area" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Business Area *</label>
-                    <input wire:model="business_area" type="text" id="business_area" list="businessAreasList" class="mt-1 block w-full border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <datalist id="businessAreasList">
-                        @foreach($businessAreas as $ba)
-                            <option value="{{ $ba }}">
-                        @endforeach
-                    </datalist>
-                    @error('business_area') <span class="text-sm text-red-600 dark:text-red-400">{{ $message }}</span> @enderror
-                </div>
-
-                <div>
-                    <label for="district_name" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">District *</label>
-                    <input wire:model="district_name" type="text" id="district_name" list="districtsList" class="mt-1 block w-full border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <datalist id="districtsList">
-                        @foreach($districts as $district)
-                            <option value="{{ $district }}">
-                        @endforeach
-                    </datalist>
-                    @error('district_name') <span class="text-sm text-red-600 dark:text-red-400">{{ $message }}</span> @enderror
-                </div>
-
-                <div>
-                    <label for="block_name" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Block *</label>
-                    <input wire:model="block_name" type="text" id="block_name" list="blocksList" class="mt-1 block w-full border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <datalist id="blocksList">
-                        @foreach($blocks as $block)
-                            <option value="{{ $block }}">
-                        @endforeach
-                    </datalist>
-                    @error('block_name') <span class="text-sm text-red-600 dark:text-red-400">{{ $message }}</span> @enderror
-                </div>
-
-                <div>
-                    <label for="gp_name" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">GP Name *</label>
-                    <input wire:model="gp_name" type="text" id="gp_name" class="mt-1 block w-full border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    @error('gp_name') <span class="text-sm text-red-600 dark:text-red-400">{{ $message }}</span> @enderror
-                </div>
-
-                <div>
-                    <label for="gp_code" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">GP Code *</label>
-                    <input wire:model="gp_code" type="text" id="gp_code" class="mt-1 block w-full border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    @error('gp_code') <span class="text-sm text-red-600 dark:text-red-400">{{ $message }}</span> @enderror
-                </div>
-
-                <div>
-                    <label for="gp_type" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">GP Type</label>
-                    <input wire:model="gp_type" type="text" id="gp_type" list="gpTypesList" class="mt-1 block w-full border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <datalist id="gpTypesList">
-                        @foreach($gpTypes as $type)
-                            <option value="{{ $type }}">
-                        @endforeach
-                    </datalist>
-                    @error('gp_type') <span class="text-sm text-red-600 dark:text-red-400">{{ $message }}</span> @enderror
-                </div>
-
-                <div>
-                    <label for="status" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Status *</label>
-                    <select wire:model="status" id="status" class="mt-1 block w-full border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="ACTIVE">Active</option>
-                        <option value="INACTIVE">Inactive</option>
-                    </select>
-                    @error('status') <span class="text-sm text-red-600 dark:text-red-400">{{ $message }}</span> @enderror
-                </div>
+    <form wire:submit="save" class="bg-white dark:bg-gray-900 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('State') }} *</label>
+                <input type="text" wire:model="state_name" list="statesList" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <datalist id="statesList">
+                    @foreach($states as $state)
+                        <option value="{{ $state }}">
+                    @endforeach
+                </datalist>
+                @error('state_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
-            <div class="flex justify-end space-x-3 pt-4 border-t border-zinc-200 dark:border-zinc-700">
-                <a href="{{ route('gram-panchayats.index') }}" class="px-4 py-2 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-600 transition">
-                    Cancel
-                </a>
-                <button type="submit" class="px-4 py-2 bg-zinc-800 dark:bg-zinc-700 text-white rounded-md hover:bg-zinc-700 dark:hover:bg-zinc-600 transition">
-                    Create Gram Panchayat
-                </button>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('Business Area') }} *</label>
+                <input type="text" wire:model="business_area" list="businessAreasList" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <datalist id="businessAreasList">
+                    @foreach($businessAreas as $ba)
+                        <option value="{{ $ba }}">
+                    @endforeach
+                </datalist>
+                @error('business_area') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
-        </form>
-    </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('District') }} *</label>
+                <input type="text" wire:model="district_name" list="districtsList" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <datalist id="districtsList">
+                    @foreach($districts as $district)
+                        <option value="{{ $district }}">
+                    @endforeach
+                </datalist>
+                @error('district_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('Block') }} *</label>
+                <input type="text" wire:model="block_name" list="blocksList" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <datalist id="blocksList">
+                    @foreach($blocks as $block)
+                        <option value="{{ $block }}">
+                    @endforeach
+                </datalist>
+                @error('block_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('GP Name') }} *</label>
+                <input type="text" wire:model="gp_name" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                @error('gp_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('GP Code') }} *</label>
+                <input type="text" wire:model="gp_code" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                @error('gp_code') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('GP Type') }}</label>
+                <input type="text" wire:model="gp_type" list="gpTypesList" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <datalist id="gpTypesList">
+                    @foreach($gpTypes as $type)
+                        <option value="{{ $type }}">
+                    @endforeach
+                </datalist>
+                @error('gp_type') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('Status') }} *</label>
+                <select wire:model="status" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="ACTIVE">{{ __('Active') }}</option>
+                    <option value="INACTIVE">{{ __('Inactive') }}</option>
+                </select>
+                @error('status') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-6">
+            <a href="{{ route('gram-panchayats.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 font-medium">
+                {{ __('Cancel') }}
+            </a>
+            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 dark:bg-zinc-700 text-white rounded hover:bg-zinc-900 dark:hover:bg-zinc-600 font-medium">
+                {{ __('Create Gram Panchayat') }}
+            </button>
+        </div>
+    </form>
 </div>

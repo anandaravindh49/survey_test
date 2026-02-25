@@ -73,8 +73,18 @@ class Main extends Component
             ->orderBy($this->sortBy, $this->sortDirection)
             ->paginate(15);
 
+        // User stats
+        $totalUsers = User::count();
+        $activeUsers = User::where('status', 'ACTIVE')->count();
+        $inactiveUsers = User::where('status', 'INACTIVE')->count();
+        $suspendedUsers = User::where('status', 'SUSPENDED')->count();
+
         return view('livewire.users.main', [
             'users' => $users,
+            'totalUsers' => $totalUsers,
+            'activeUsers' => $activeUsers,
+            'inactiveUsers' => $inactiveUsers,
+            'suspendedUsers' => $suspendedUsers,
         ]);
     }
 }

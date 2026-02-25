@@ -58,7 +58,7 @@
                 </svg>
                 {{ __('Reset') }}
             </button>
-            <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('Filter by:') }}</span>
+            {{-- <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('Filter by:') }}</span> --}}
         </div>
         
         <div class="flex gap-3 flex-wrap items-center">
@@ -129,7 +129,7 @@
                         @endif
                     </th>
                     <th class="px-4 py-2 text-left">{{ __('Status') }}</th>
-                    <th class="px-4 py-2 text-right">{{ __('Actions') }}</th>
+                    <th class="px-4 py-2 text-center">{{ __('Actions') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -149,7 +149,7 @@
                             @endif
                         </td>
                         <td class="px-4 py-2 text-sm">
-                            <div class="flex gap-2 justify-end">
+                            <div class="flex gap-2 justify-center">
                                 <a href="{{ route('business-areas.show', $area) }}" class="inline-flex items-center px-2.5 py-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all duration-200" title="View Business Area">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
