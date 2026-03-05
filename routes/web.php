@@ -24,7 +24,11 @@ use App\Livewire\GramPanchayats\Main as GramPanchayatsMain;
 use App\Livewire\GramPanchayats\Show as GramPanchayatsShow;
 use App\Livewire\GramPanchayats\Create as GramPanchayatsCreate;
 use App\Livewire\GramPanchayats\Edit as GramPanchayatsEdit;
+use App\Livewire\FileManager as FileManager;
+use App\Http\Controllers\FileManagerController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 
 Route::get('/', function () {
     return view('welcome');
@@ -70,6 +74,119 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('gram-panchayats/create', GramPanchayatsCreate::class)->name('gram-panchayats.create');
     Route::get('gram-panchayats/{gramPanchayat}', GramPanchayatsShow::class)->name('gram-panchayats.show');
     Route::get('gram-panchayats/{gramPanchayat}/edit', GramPanchayatsEdit::class)->name('gram-panchayats.edit');
+    
+    // File Manager
+Route::get('file-manager', FileManager::class)->name('file-manager.index');
+
+// POST handler for uploads
+Route::post('file-manager/upload', [FileManagerController::class, 'upload'])->name('file-manager.upload');
+
+// Redirect GET upload
+Route::get('file-manager/upload', function () {
+    return redirect()->route('file-manager.index');
+})->name('file-manager.upload.redirect');
+
+Route::get('/file-view/{path}', function ($path) {
+
+    $path = base64_decode($path);
+
+    try {
+
+        $disk = Storage::disk('file_manager');
+
+        $stream = $disk->readStream($path);
+
+        if (!$stream) {
+            abort(404);
+        }
+
+        return response()->stream(function () use ($stream) {
+            fpassthru($stream);
+        }, 200, [
+            "Content-Type" => "application/octet-stream",
+            "Content-Disposition" => "inline; filename=\"" . basename($path) . "\""
+        ]);
+
+    } catch (\Throwable $e) {
+        abort(404);
+    }
+
+})->where('path', '.*')->name('file-manager.view');
 });
 
 require __DIR__.'/settings.php';
+
+// Local-only diagnostic route to test `file_manager` disk connectivity.
+// Returns a small JSON result and does not expose credentials. Only enabled
+// when `APP_ENV=local` to avoid accidental exposure on production.
+if (app()->environment('local')) {
+    Route::get('file-manager/diagnose', function () {
+        $cfg = config('filesystems.disks.file_manager', []);
+        $safe = [
+            'driver' => $cfg['driver'] ?? null,
+            'bucket' => $cfg['bucket'] ?? null,
+            'region' => $cfg['region'] ?? null,
+            'endpoint' => $cfg['endpoint'] ?? null,
+            'use_path_style_endpoint' => $cfg['use_path_style_endpoint'] ?? null,
+        ];
+
+        $results = ['disk' => $safe, 'flysystem' => null, 'aws_sdk' => null];
+
+        // 1) Try Flysystem (Storage facade)
+        try {
+            $disk = \Illuminate\Support\Facades\Storage::disk('file_manager');
+            $path = 'diagnostic/'.time().'-test.txt';
+            $ok = $disk->put($path, 'ok');
+            $exists = $disk->exists($path);
+            $results['flysystem'] = ['put' => (bool) $ok, 'exists' => (bool) $exists];
+            // Cleanup
+            try { $disk->delete($path); } catch (\Exception $_) { /* ignore */ }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('file-manager/diagnose: flysystem test failed', ['message' => $e->getMessage(), 'disk' => $safe]);
+            $results['flysystem'] = ['error' => $e->getMessage()];
+        }
+
+        // 2) Try AWS SDK directly (construct S3Client from disk config)
+        try {
+            if (empty($cfg['driver']) || ($cfg['driver'] !== 's3' && $cfg['driver'] !== 'aws')) {
+                $results['aws_sdk'] = ['skipped' => 'disk driver not s3'];
+            } else {
+                $s3config = [
+                    'version' => 'latest',
+                    'region' => $cfg['region'] ?? env('AWS_DEFAULT_REGION'),
+                ];
+
+                // Credentials only set if present — we will not echo them back
+                if (! empty($cfg['key']) && ! empty($cfg['secret'])) {
+                    $s3config['credentials'] = ['key' => $cfg['key'], 'secret' => $cfg['secret']];
+                } elseif (! empty(env('AWS_ACCESS_KEY_ID')) && ! empty(env('AWS_SECRET_ACCESS_KEY'))) {
+                    $s3config['credentials'] = ['key' => env('AWS_ACCESS_KEY_ID'), 'secret' => env('AWS_SECRET_ACCESS_KEY')];
+                }
+
+                if (! empty($cfg['endpoint'])) {
+                    $s3config['endpoint'] = $cfg['endpoint'];
+                } elseif (! empty(env('AWS_ENDPOINT'))) {
+                    $s3config['endpoint'] = env('AWS_ENDPOINT');
+                }
+
+                if (! empty($cfg['use_path_style_endpoint'])) {
+                    $s3config['use_path_style_endpoint'] = (bool) $cfg['use_path_style_endpoint'];
+                }
+
+                $s3 = new \Aws\S3\S3Client($s3config);
+                $bucket = $cfg['bucket'] ?? env('AWS_BUCKET');
+                $key = 'diagnostic/'.time().'-sdk-test.txt';
+
+                $put = $s3->putObject(['Bucket' => $bucket, 'Key' => $key, 'Body' => 'ok']);
+                $results['aws_sdk'] = ['http_status' => $put['@metadata']['statusCode'] ?? null, 'request_id' => $put['@metadata']['requestId'] ?? null];
+                // Cleanup
+                try { $s3->deleteObject(['Bucket' => $bucket, 'Key' => $key]); } catch (\Exception $_) { /* ignore */ }
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('file-manager/diagnose: aws sdk test failed', ['message' => $e->getMessage(), 'disk' => $safe]);
+            $results['aws_sdk'] = ['error' => $e->getMessage()];
+        }
+
+        return response()->json($results);
+    });
+}

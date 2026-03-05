@@ -1,15 +1,33 @@
 <?php return array(
     'root' => array(
         'name' => 'laravel/livewire-starter-kit',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '432968070d9f5e47ffe5a774cae2d9e35ade56d4',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
+        'aws/aws-crt-php' => array(
+            'pretty_version' => 'v1.2.7',
+            'version' => '1.2.7.0',
+            'reference' => 'd71d9906c7bb63a28295447ba12e74723bd3730e',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../aws/aws-crt-php',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'aws/aws-sdk-php' => array(
+            'pretty_version' => '3.371.4',
+            'version' => '3.371.4.0',
+            'reference' => '957f8a5ecc30670c95dfc37a9d04660899fc44e0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../aws/aws-sdk-php',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'bacon/bacon-qr-code' => array(
             'pretty_version' => 'v3.0.3',
             'version' => '3.0.3.0',
@@ -427,6 +445,15 @@
                 0 => 'v12.50.0',
             ),
         ),
+        'kkszymanowski/traitor' => array(
+            'pretty_version' => '1.1.0',
+            'version' => '1.1.0.0',
+            'reference' => '97d12e2b045fcc4e132fed5ddee3b1dcff409989',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../kkszymanowski/traitor',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'kodova/hamcrest-php' => array(
             'dev_requirement' => true,
             'replaced' => array(
@@ -452,9 +479,9 @@
             'dev_requirement' => false,
         ),
         'laravel/livewire-starter-kit' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '432968070d9f5e47ffe5a774cae2d9e35ade56d4',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -538,6 +565,15 @@
             'reference' => '1717e0b3642b0df65ecb0cc89cdd99fa840672ff',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/flysystem',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'league/flysystem-aws-s3-v3' => array(
+            'pretty_version' => '3.32.0',
+            'version' => '3.32.0.0',
+            'reference' => 'a1979df7c9784d334ea6df356aed3d18ac6673d0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../league/flysystem-aws-s3-v3',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -654,6 +690,15 @@
             'replaced' => array(
                 0 => '^1.0',
             ),
+        ),
+        'mtdowling/jmespath.php' => array(
+            'pretty_version' => '2.8.0',
+            'version' => '2.8.0.0',
+            'reference' => 'a2a865e05d5f420b50cc2f85bb78d565db12a6bc',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../mtdowling/jmespath.php',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'myclabs/deep-copy' => array(
             'pretty_version' => '1.13.4',
@@ -989,6 +1034,15 @@
                 0 => '4.9.2',
             ),
         ),
+        'santigarcor/laratrust' => array(
+            'pretty_version' => '8.5.4',
+            'version' => '8.5.4.0',
+            'reference' => 'cd995c95a6a6a4574bc2027cd5346f3b9785c793',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../santigarcor/laratrust',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'sebastian/cli-parser' => array(
             'pretty_version' => '3.0.2',
             'version' => '3.0.2.0',
@@ -1207,6 +1261,15 @@
             'provided' => array(
                 0 => '2.0|3.0',
             ),
+        ),
+        'symfony/filesystem' => array(
+            'pretty_version' => 'v8.0.6',
+            'version' => '8.0.6.0',
+            'reference' => '7bf9162d7a0dff98d079b72948508fa48018a770',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/filesystem',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'symfony/finder' => array(
             'pretty_version' => 'v7.4.5',

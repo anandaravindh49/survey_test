@@ -37,6 +37,12 @@
                         {{ __('Machines') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
+                
+                <flux:sidebar.group :heading="__('Files')" class="grid">
+                    <flux:sidebar.item icon="folder" :href="route('file-manager.index')" :current="request()->routeIs('file-manager*')" wire:navigate>
+                        {{ __('File Manager') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
             </flux:sidebar.nav>
 
             <flux:spacer />

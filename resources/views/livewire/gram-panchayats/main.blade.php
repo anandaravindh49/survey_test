@@ -1,7 +1,10 @@
 <div>
     <div class="mb-6 flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ __('Gram Panchayats') }}</h1>
-        <a href="{{ route('gram-panchayats.create') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 dark:bg-zinc-700 text-white rounded hover:bg-zinc-900 dark:hover:bg-zinc-600 font-medium">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ __('Gram Panchayats') }}</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ __('Manage gram panchayats across states, business areas, districts and blocks') }}</p>
+        </div>
+        <a href="{{ route('gram-panchayats.create') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 dark:bg-zinc-700 text-white rounded-lg hover:bg-zinc-900 dark:hover:bg-zinc-600 font-medium transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
@@ -10,71 +13,91 @@
     </div>
 
     @if (session()->has('message'))
-        <div class="mb-6 px-4 py-2 bg-green-100 text-green-800 rounded">
+        <div class="mb-6 px-4 py-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-400 rounded-lg">
             {{ session('message') }}
         </div>
     @endif
 
     <!-- Stats Grid -->
     <div class="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total States') }}</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalStates }}</p>
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalStates }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Total States') }}</p>
+                </div>
             </div>
-            <svg class="w-12 h-12 text-blue-200 dark:text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path>
-            </svg>
         </div>
         
-        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Business Areas') }}</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalBusinessAreas }}</p>
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalBusinessAreas }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Business Areas') }}</p>
+                </div>
             </div>
-            <svg class="w-12 h-12 text-emerald-200 dark:text-emerald-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
         </div>
         
-        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total Districts') }}</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalDistricts }}</p>
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalDistricts }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Total Districts') }}</p>
+                </div>
             </div>
-            <svg class="w-12 h-12 text-purple-200 dark:text-purple-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
         </div>
         
-        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total Blocks') }}</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalBlocks }}</p>
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalBlocks }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Total Blocks') }}</p>
+                </div>
             </div>
-            <svg class="w-12 h-12 text-amber-200 dark:text-amber-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-            </svg>
         </div>
 
-        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Gram Panchayats') }}</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalGramPanchayats }}</p>
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalGramPanchayats }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Gram Panchayats') }}</p>
+                </div>
             </div>
-            <svg class="w-12 h-12 text-indigo-200 dark:text-indigo-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-            </svg>
         </div>
     </div>
 
     <!-- Filter Section -->
-    <div class="mb-6 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+    <div class="mb-6 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
         <div class="flex gap-2 items-center mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
             <button
                 wire:click="resetFilters"
-                class="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium transition-colors"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors"
             >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
@@ -84,17 +107,17 @@
             {{-- <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('Filter by:') }}</span> --}}
         </div>
         
-        <div class="flex gap-3 flex-wrap items-center">
+        <div class="flex flex-wrap gap-3">
             <input
                 wire:model.live="search"
                 type="search"
                 placeholder="{{ __('search GP...') }}"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-64"
             />
             
             <select
                 wire:model.live="filterState"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
             >
                 <option value="">{{ __('All States') }}</option>
                 @foreach($states as $state)
@@ -104,7 +127,7 @@
             
             <select
                 wire:model.live="filterBusinessArea"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
             >
                 <option value="">{{ __('All Business Areas') }}</option>
                 @foreach($businessAreas as $ba)
@@ -114,7 +137,7 @@
 
             <select
                 wire:model.live="filterDistrict"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
             >
                 <option value="">{{ __('All Districts') }}</option>
                 @foreach($districts as $district)
@@ -124,7 +147,7 @@
 
             <select
                 wire:model.live="filterBlock"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
             >
                 <option value="">{{ __('All Blocks') }}</option>
                 @foreach($blocks as $block)
@@ -134,7 +157,7 @@
 
             <select
                 wire:model.live="filterGpType"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
             >
                 <option value="">{{ __('All GP Types') }}</option>
                 @foreach($gpTypes as $type)
@@ -144,7 +167,7 @@
             
             <select
                 wire:model.live="filterStatus"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
             >
                 <option value="">{{ __('All Status') }}</option>
                 <option value="ACTIVE">{{ __('Active') }}</option>
@@ -154,71 +177,71 @@
     </div>
 
     <!-- Table -->
-    <div class="bg-white dark:bg-gray-900 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-x-auto">
+    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead class="bg-gray-50 dark:bg-gray-800">
+            <thead class="bg-gray-50 dark:bg-gray-800/50">
                 <tr>
-                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('state_name')">
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('state_name')">
                         {{ __('State') }}
                         @if($sortField === 'state_name')
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('business_area')">
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('business_area')">
                         {{ __('Business Area') }}
                         @if($sortField === 'business_area')
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('district_name')">
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('district_name')">
                         {{ __('District') }}
                         @if($sortField === 'district_name')
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('block_name')">
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('block_name')">
                         {{ __('Block') }}
                         @if($sortField === 'block_name')
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('gp_name')">
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('gp_name')">
                         {{ __('GP Name') }}
                         @if($sortField === 'gp_name')
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('gp_code')">
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('gp_code')">
                         {{ __('GP Code') }}
                         @if($sortField === 'gp_code')
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left">{{ __('GP Type') }}</th>
-                    <th class="px-4 py-2 text-left">{{ __('Status') }}</th>
-                    <th class="px-4 py-2 text-center">{{ __('Actions') }}</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ __('GP Type') }}</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ __('Status') }}</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ __('Actions') }}</th>
                 </tr>
             </thead>
             <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                 @forelse($gramPanchayats as $gp)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-                        <td class="px-4 py-2 text-sm">{{ $gp->state_name }}</td>
-                        <td class="px-4 py-2 text-sm">{{ $gp->business_area }}</td>
-                        <td class="px-4 py-2 text-sm">{{ $gp->district_name }}</td>
-                        <td class="px-4 py-2 text-sm">{{ $gp->block_name }}</td>
-                        <td class="px-4 py-2 text-sm">{{ $gp->gp_name }}</td>
-                        <td class="px-4 py-2 text-sm">
-                            <span class="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">{{ $gp->gp_code }}</span>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">{{ $gp->state_name }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">{{ $gp->business_area }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">{{ $gp->district_name }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">{{ $gp->block_name }}</td>
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-100">{{ $gp->gp_name }}</td>
+                        <td class="px-4 py-3 text-sm">
+                            <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-md">{{ $gp->gp_code }}</span>
                         </td>
-                        <td class="px-4 py-2 text-sm">{{ $gp->gp_type }}</td>
-                        <td class="px-4 py-2 text-sm">
+                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">{{ $gp->gp_type }}</td>
+                        <td class="px-4 py-3 text-sm">
                             @if($gp->status === 'ACTIVE')
-                                <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded font-semibold">ACTIVE</span>
+                                <span class="inline-flex items-center px-2.5 py-1 text-xs font-semibold bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-md">ACTIVE</span>
                             @else
-                                <span class="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">INACTIVE</span>
+                                <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-md">INACTIVE</span>
                             @endif
                         </td>
-                        <td class="px-4 py-2 text-sm">
+                        <td class="px-4 py-3 text-sm">
                             <div class="flex gap-2 justify-center">
                                 <a href="{{ route('gram-panchayats.show', $gp) }}" class="inline-flex items-center px-2.5 py-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all duration-200" title="View Gram Panchayat">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -241,14 +264,17 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                            {{ __('No gram panchayats found') }}
+                        <td colspan="9" class="text-center py-12">
+                            <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ __('No gram panchayats found') }}</p>
                         </td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
-        <div class="mt-6 px-4 py-4">
+        <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
             {{ $gramPanchayats->links() }}
         </div>
     </div>

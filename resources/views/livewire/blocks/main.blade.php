@@ -1,7 +1,10 @@
 <div>
     <div class="mb-6 flex justify-between items-center">
-        <h1 class="text-2xl font-bold">{{ __('Blocks') }}</h1>
-        <a href="{{ route('blocks.create') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 dark:bg-zinc-700 text-white rounded hover:bg-zinc-900 dark:hover:bg-zinc-600 font-medium">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ __('Blocks') }}</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ __('Manage blocks across packages, states, business areas and districts') }}</p>
+        </div>
+        <a href="{{ route('blocks.create') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 dark:bg-zinc-700 text-white rounded-lg hover:bg-zinc-900 dark:hover:bg-zinc-600 font-medium transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
@@ -10,60 +13,76 @@
     </div>
 
     @if (session()->has('message'))
-        <div class="mb-6 px-4 py-2 bg-green-100 text-green-800 rounded">
+        <div class="mb-6 px-4 py-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-400 rounded-lg">
             {{ session('message') }}
         </div>
     @endif
 
     <!-- Stats Grid -->
     <div class="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total Package') }}</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalPackages }}</p>
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10m-4-4l4 2m-8-2l4-2"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalPackages }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Total Packages') }}</p>
+                </div>
             </div>
-            <svg class="w-12 h-12 text-blue-200 dark:text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10m-4-4l4 2m-8-2l4-2"></path>
-            </svg>
         </div>
         
-        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total States') }}</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalStates }}</p>
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalStates }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Total States') }}</p>
+                </div>
             </div>
-            <svg class="w-12 h-12 text-emerald-200 dark:text-emerald-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-            </svg>
         </div>
         
-        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total Districts') }}</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalDistricts }}</p>
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalDistricts }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Total Districts') }}</p>
+                </div>
             </div>
-            <svg class="w-12 h-12 text-purple-200 dark:text-purple-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-            </svg>
         </div>
         
-        <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Total Blocks') }}</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalBlocks }}</p>
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalBlocks }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Total Blocks') }}</p>
+                </div>
             </div>
-            <svg class="w-12 h-12 text-amber-200 dark:text-amber-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-            </svg>
         </div>
     </div>
 
     <!-- Filter Section -->
-    <div class="mb-6 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+    <div class="mb-6 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
         <div class="flex gap-2 items-center mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
             <button
                 wire:click="resetFilters"
-                class="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium transition-colors"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors"
             >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
@@ -73,17 +92,17 @@
             {{-- <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('Filter by:') }}</span> --}}
         </div>
         
-        <div class="flex gap-3 flex-wrap items-center">
+        <div class="flex flex-wrap gap-3">
             <input
                 wire:model.live="search"
                 type="search"
                 placeholder="{{ __('search block...') }}"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-64"
             />
             
             <select
                 wire:model.live="filterPackage"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
             >
                 <option value="">{{ __('All Packages') }}</option>
                 @foreach($packages as $package)
@@ -93,7 +112,7 @@
             
             <select
                 wire:model.live="filterState"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
             >
                 <option value="">{{ __('All States') }}</option>
                 @foreach($states as $state)
@@ -103,7 +122,7 @@
 
             <select
                 wire:model.live="filterDistrict"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
             >
                 <option value="">{{ __('All Districts') }}</option>
                 @foreach($districts as $district)
@@ -113,7 +132,7 @@
             
             <select
                 wire:model.live="filterStatus"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
             >
                 <option value="">{{ __('All Status') }}</option>
                 <option value="ACTIVE">{{ __('Active') }}</option>
@@ -122,62 +141,62 @@
         </div>
     </div>
 
-    <div class="bg-white dark:bg-gray-900 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-x-auto">
+    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead class="bg-gray-50 dark:bg-gray-800">
+            <thead class="bg-gray-50 dark:bg-gray-800/50">
                 <tr>
-                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('package_name')">
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('package_name')">
                         {{ __('Package') }}
                         @if ($sortField === 'package_name')
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('state_name')">
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('state_name')">
                         {{ __('State') }}
                         @if ($sortField === 'state_name')
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('district_name')">
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('district_name')">
                         {{ __('District') }}
                         @if ($sortField === 'district_name')
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('block_name')">
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('block_name')">
                         {{ __('Block Name') }}
                         @if ($sortField === 'block_name')
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left cursor-pointer" wire:click="sort('code')">
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('code')">
                         {{ __('Code') }}
                         @if ($sortField === 'code')
                             <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                         @endif
                     </th>
-                    <th class="px-4 py-2 text-left">{{ __('Status') }}</th>
-                    <th class="px-4 py-2 text-center">{{ __('Actions') }}</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ __('Status') }}</th>
+                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ __('Actions') }}</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                 @forelse($blocks as $block)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-                        <td class="px-4 py-2 text-sm">{{ $block->package_name }}</td>
-                        <td class="px-4 py-2 text-sm">{{ $block->state_name }}</td>
-                        <td class="px-4 py-2 text-sm">{{ $block->district_name }}</td>
-                        <td class="px-4 py-2 text-sm">{{ $block->block_name }}</td>
-                        <td class="px-4 py-2 text-sm">
-                            <span class="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">{{ $block->code }}</span>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">{{ $block->package_name }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">{{ $block->state_name }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">{{ $block->district_name }}</td>
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-100">{{ $block->block_name }}</td>
+                        <td class="px-4 py-3 text-sm">
+                            <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-md">{{ $block->code }}</span>
                         </td>
-                        <td class="px-4 py-2 text-sm">
+                        <td class="px-4 py-3 text-sm">
                             @if($block->status === 'ACTIVE')
-                                <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded font-semibold">ACTIVE</span>
+                                <span class="inline-flex items-center px-2.5 py-1 text-xs font-semibold bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-md">ACTIVE</span>
                             @else
-                                <span class="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">INACTIVE</span>
+                                <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-md">INACTIVE</span>
                             @endif
                         </td>
-                        <td class="px-4 py-2 text-sm">
+                        <td class="px-4 py-3 text-sm">
                             <div class="flex gap-2 justify-center">
                                 <a href="{{ route('blocks.show', $block) }}" class="inline-flex items-center px-2.5 py-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all duration-200" title="View Block">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -200,7 +219,12 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">{{ __('No blocks found') }}</td>
+                        <td colspan="7" class="text-center py-12">
+                            <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ __('No blocks found') }}</p>
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
@@ -208,7 +232,7 @@
     </div>
 
     <!-- Pagination -->
-    <div class="mt-6">
+    <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
         {{ $blocks->links() }}
     </div>
 </div>

@@ -60,6 +60,21 @@ return [
             'report' => false,
         ],
 
+        // Dedicated disk for the File Manager module. Uses S3 by default but
+        // falls back to the main AWS_* env vars when FILE_MANAGER_* are not set.
+        'file_manager' => [
+            'driver' => 's3',
+            'key' => env('FILE_MANAGER_AWS_ACCESS_KEY_ID', env('AWS_ACCESS_KEY_ID')),
+            'secret' => env('FILE_MANAGER_AWS_SECRET_ACCESS_KEY', env('AWS_SECRET_ACCESS_KEY')),
+            'region' => env('FILE_MANAGER_AWS_DEFAULT_REGION', env('AWS_DEFAULT_REGION')),
+            'bucket' => env('FILE_MANAGER_AWS_BUCKET', env('AWS_BUCKET')),
+            'url' => env('FILE_MANAGER_AWS_URL', env('AWS_URL')),
+            'endpoint' => env('FILE_MANAGER_AWS_ENDPOINT', env('AWS_ENDPOINT')),
+            'use_path_style_endpoint' => filter_var(env('FILE_MANAGER_AWS_USE_PATH_STYLE_ENDPOINT', env('AWS_USE_PATH_STYLE_ENDPOINT', false)), FILTER_VALIDATE_BOOLEAN),
+            'throw' => false,
+            'report' => false,
+        ],
+
     ],
 
     /*

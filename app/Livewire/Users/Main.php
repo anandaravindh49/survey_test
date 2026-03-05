@@ -3,6 +3,7 @@
 namespace App\Livewire\Users;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,6 +16,21 @@ class Main extends Component
     public $filterRole = '';
     public $sortBy = 'name';
     public $sortDirection = 'asc';
+
+    // Edit modal properties
+    public $showEditModal = false;
+    public $editUserId = null;
+    public $editForm = [
+        'name' => '',
+        'email' => '',
+        'mobile' => '',
+        'role' => '',
+        'states' => '',
+        'nodal' => 'NO',
+        'status' => 'ACTIVE',
+        'password' => '',
+        'password_confirmation' => '',
+    ];
 
     protected $queryString = ['search', 'sortBy', 'sortDirection'];
 
@@ -49,6 +65,79 @@ class Main extends Component
             $this->sortBy = $column;
             $this->sortDirection = 'asc';
         }
+    }
+
+    public function editUser($userId)
+    {
+        $user = User::findOrFail($userId);
+        $this->editUserId = $userId;
+        $this->editForm = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'mobile' => $user->mobile,
+            'role' => $user->role,
+            'states' => $user->states,
+            'nodal' => $user->nodal,
+            'status' => $user->status,
+            'password' => '',
+            'password_confirmation' => '',
+        ];
+        $this->showEditModal = true;
+    }
+
+    public function closeEditModal()
+    {
+        $this->showEditModal = false;
+        $this->editUserId = null;
+        $this->editForm = [
+            'name' => '',
+            'email' => '',
+            'mobile' => '',
+            'role' => '',
+            'states' => '',
+            'nodal' => 'NO',
+            'status' => 'ACTIVE',
+            'password' => '',
+            'password_confirmation' => '',
+        ];
+        $this->resetErrorBag();
+    }
+
+    public function updateUser()
+    {
+        $rules = [
+            'editForm.name' => 'required|string|max:255',
+            'editForm.email' => 'required|email|unique:users,email,' . $this->editUserId,
+            'editForm.mobile' => 'nullable|string|max:20',
+            'editForm.role' => 'nullable|string|max:255',
+            'editForm.states' => 'nullable|string|max:255',
+            'editForm.nodal' => 'required|in:YES,NO',
+            'editForm.status' => 'required|in:ACTIVE,INACTIVE,SUSPENDED',
+            'editForm.password' => 'nullable|min:8|confirmed',
+        ];
+
+        $this->validate($rules);
+
+        $user = User::findOrFail($this->editUserId);
+        
+        $data = [
+            'name' => $this->editForm['name'],
+            'email' => $this->editForm['email'],
+            'mobile' => $this->editForm['mobile'],
+            'role' => $this->editForm['role'],
+            'states' => $this->editForm['states'],
+            'nodal' => $this->editForm['nodal'],
+            'status' => $this->editForm['status'],
+        ];
+
+        if (!empty($this->editForm['password'])) {
+            $data['password'] = Hash::make($this->editForm['password']);
+        }
+
+        $user->update($data);
+
+        session()->flash('message', 'User updated successfully!');
+        $this->closeEditModal();
     }
 
     public function delete($userId)

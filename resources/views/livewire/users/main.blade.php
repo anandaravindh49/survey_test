@@ -96,17 +96,17 @@
             {{-- <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('Filter by:') }}</span> --}}
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="flex flex-wrap gap-3">
             <input
                 wire:model.live="search"
                 type="search"
                 placeholder="{{ __('Search by name, email or mobile...') }}"
-                class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 w-64"
             />
             
             <select
                 wire:model.live="filterStatus"
-                class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
             >
                 <option value="">{{ __('All Status') }}</option>
                 <option value="ACTIVE">{{ __('Active') }}</option>
@@ -116,7 +116,7 @@
             
             <select
                 wire:model.live="filterRole"
-                class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
             >
                 <option value="">{{ __('All Roles') }}</option>
                 <option value="ADMIN">{{ __('Admin') }}</option>
@@ -128,9 +128,9 @@
 
     <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead class="bg-gray-800 dark:bg-gray-800">
+            <thead class="bg-gray-50 dark:bg-gray-800/50">
                 <tr>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors" wire:click="sort('name')">
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('name')">
                         <div class="flex items-center gap-2">
                             {{ __('User') }}
                             @if ($sortBy === 'name')
@@ -144,7 +144,7 @@
                             @endif
                         </div>
                     </th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors" wire:click="sort('role')">
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('role')">
                         <div class="flex items-center gap-2">
                             {{ __('Role') }}
                             @if ($sortBy === 'role')
@@ -158,7 +158,7 @@
                             @endif
                         </div>
                     </th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors" wire:click="sort('status')">
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('status')">
                         <div class="flex items-center gap-2">
                             {{ __('Status') }}
                             @if ($sortBy === 'status')
@@ -172,7 +172,7 @@
                             @endif
                         </div>
                     </th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors" wire:click="sort('created_at')">
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('created_at')">
                         <div class="flex items-center gap-2">
                             {{ __('Joined') }}
                             @if ($sortBy === 'created_at')
@@ -186,7 +186,7 @@
                             @endif
                         </div>
                     </th>
-                    <th class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors" wire:click="sort('updated_at')">
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors" wire:click="sort('updated_at')">
                         <div class="flex items-center gap-2">
                             {{ __('Updated') }}
                             @if ($sortBy === 'updated_at')
@@ -200,7 +200,7 @@
                             @endif
                         </div>
                     </th>
-                    <th class="px-6 py-4 text-center text-xs font-semibold text-white uppercase tracking-wider">{{ __('Action') }}</th>
+                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ __('Action') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -280,11 +280,11 @@
                                         <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
                                     </svg>
                                 </a>
-                                <a href="{{ route('users.edit', $user->id) }}" class="inline-flex items-center px-2.5 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-all duration-200" title="Edit">
+                                <button wire:click="editUser({{ $user->id }})" class="inline-flex items-center px-2.5 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-all duration-200" title="Edit">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
                                     </svg>
-                                </a>
+                                </button>
                                 <button wire:click="delete({{ $user->id }})" wire:confirm="Are you sure you want to delete this user? This action cannot be undone." class="inline-flex items-center px-2.5 py-1.5 text-rose-600 dark:text-rose-400 hover:text-rose-800 dark:hover:text-rose-300 transition-all duration-200" title="Delete">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
@@ -310,4 +310,191 @@
             {{ $users->links() }}
         </div>
     </div>
+
+    <!-- Edit User Modal -->
+    @if($showEditModal)
+    <div class="fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <!-- Background overlay -->
+            <div class="fixed inset-0 transition-opacity bg-gray-900 bg-opacity-50" wire:click="closeEditModal"></div>
+            
+            <!-- Modal panel -->
+            <div class="relative inline-block w-full max-w-4xl overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-900 rounded-2xl shadow-2xl">
+                <!-- Modal Header -->
+                <div class="bg-black dark:bg-gray-950 text-white px-6 py-4 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-semibold">{{ __('Edit User') }}</h2>
+                        <p class="text-sm text-gray-400 mt-0.5">{{ __('Update user information and settings') }}</p>
+                    </div>
+                    <button wire:click="closeEditModal" class="inline-flex items-center justify-center w-8 h-8 bg-gray-800 hover:bg-gray-700 rounded-full transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="px-6 py-6">
+                    <form wire:submit.prevent="updateUser">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Name -->
+                            <div>
+                                <label for="edit_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ __('Name') }}
+                                </label>
+                                <input
+                                    wire:model="editForm.name"
+                                    type="text"
+                                    id="edit_name"
+                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                    placeholder="0"
+                                />
+                                @error('editForm.name') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                            </div>
+
+                            <!-- Email -->
+                            <div>
+                                <label for="edit_email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ __('Email') }}
+                                </label>
+                                <input
+                                    wire:model="editForm.email"
+                                    type="email"
+                                    id="edit_email"
+                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                    placeholder="0"
+                                />
+                                @error('editForm.email') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                            </div>
+
+                            <!-- Mobile -->
+                            <div>
+                                <label for="edit_mobile" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ __('Mobile') }}
+                                </label>
+                                <input
+                                    wire:model="editForm.mobile"
+                                    type="text"
+                                    id="edit_mobile"
+                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                    placeholder="0"
+                                />
+                                @error('editForm.mobile') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                            </div>
+
+                            <!-- Role -->
+                            <div>
+                                <label for="edit_role" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ __('Role') }}
+                                </label>
+                                <input
+                                    wire:model="editForm.role"
+                                    type="text"
+                                    id="edit_role"
+                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                    placeholder="0"
+                                />
+                                @error('editForm.role') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                            </div>
+
+                            <!-- States -->
+                            <div>
+                                <label for="edit_states" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ __('States') }}
+                                </label>
+                                <input
+                                    wire:model="editForm.states"
+                                    type="text"
+                                    id="edit_states"
+                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                    placeholder="0"
+                                />
+                                @error('editForm.states') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                            </div>
+
+                            <!-- Nodal -->
+                            <div>
+                                <label for="edit_nodal" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ __('Nodal') }}
+                                </label>
+                                <select
+                                    wire:model="editForm.nodal"
+                                    id="edit_nodal"
+                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                >
+                                    <option value="YES">YES</option>
+                                    <option value="NO">NO</option>
+                                </select>
+                                @error('editForm.nodal') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                            </div>
+
+                            <!-- Status -->
+                            <div>
+                                <label for="edit_status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ __('Status') }}
+                                </label>
+                                <select
+                                    wire:model="editForm.status"
+                                    id="edit_status"
+                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                >
+                                    <option value="ACTIVE">ACTIVE</option>
+                                    <option value="INACTIVE">INACTIVE</option>
+                                    <option value="SUSPENDED">SUSPENDED</option>
+                                </select>
+                                @error('editForm.status') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                            </div>
+
+                            <!-- Password -->
+                            <div>
+                                <label for="edit_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ __('Password') }}
+                                </label>
+                                <input
+                                    wire:model="editForm.password"
+                                    type="password"
+                                    id="edit_password"
+                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                    placeholder="0"
+                                />
+                                @error('editForm.password') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                            </div>
+
+                            <!-- Confirm Password -->
+                            <div>
+                                <label for="edit_password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ __('Confirm Password') }}
+                                </label>
+                                <input
+                                    wire:model="editForm.password_confirmation"
+                                    type="password"
+                                    id="edit_password_confirmation"
+                                    class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                    placeholder="0"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="flex gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                            <button
+                                type="button"
+                                wire:click="closeEditModal"
+                                class="px-6 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 font-medium transition-colors text-sm"
+                            >
+                                {{ __('Cancel') }}
+                            </button>
+                            <button
+                                type="submit"
+                                class="px-6 py-2 bg-black dark:bg-gray-900 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-800 font-medium transition-colors text-sm"
+                            >
+                                {{ __('Yeah, Submit') }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>
