@@ -28,7 +28,6 @@ use App\Livewire\FileManager as FileManager;
 use App\Http\Controllers\FileManagerController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Response;
 
 Route::get('/', function () {
     return view('welcome');
@@ -94,16 +93,124 @@ Route::get('/file-view/{path}', function ($path) {
 
         $disk = Storage::disk('file_manager');
 
+        if (! $disk->exists($path)) {
+            abort(404);
+        }
+
         $stream = $disk->readStream($path);
 
-        if (!$stream) {
+        if (! $stream) {
             abort(404);
+        }
+
+        // Determine a sensible MIME type so browsers will attempt to display
+        // the file inline instead of forcing a download. Preference order:
+        // 1) stored ManagedFile->mime (if set and not generic)
+        // 2) guess from file extension
+        // 3) fallback to application/octet-stream
+        $mime = 'application/octet-stream';
+
+        try {
+            $mf = \App\Models\ManagedFile::where('path', $path)->first();
+            if ($mf && ! empty($mf->mime) && $mf->mime !== 'application/octet-stream') {
+                $mime = $mf->mime;
+            } else {
+                // Guess from extension for common displayable types.
+                $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                $map = [
+                    'pdf' => 'application/pdf',
+                    'txt' => 'text/plain',
+                    'html' => 'text/html',
+                    'htm' => 'text/html',
+                    'md' => 'text/markdown',
+                    'csv' => 'text/csv',
+                    'json' => 'application/json',
+                    'xml' => 'application/xml',
+                    'svg' => 'image/svg+xml',
+                    'jpg' => 'image/jpeg',
+                    'jpeg' => 'image/jpeg',
+                    'png' => 'image/png',
+                    'gif' => 'image/gif',
+                    'webp' => 'image/webp',
+                    'bmp' => 'image/bmp',
+                    'mp4' => 'video/mp4',
+                    'webm' => 'video/webm',
+                    'ogg' => 'video/ogg',
+                    'mp3' => 'audio/mpeg',
+                    'wav' => 'audio/wav',
+                    'doc' => 'application/msword',
+                    'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'xls' => 'application/vnd.ms-excel',
+                    'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'ppt' => 'application/vnd.ms-powerpoint',
+                    'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                ];
+
+                if (isset($map[$ext])) {
+                    $mime = $map[$ext];
+                } else {
+                    // As a last effort, attempt to use the disk adapter's mimeType
+                    // if available — wrapped in try/catch because some adapters
+                    // may not implement it or throw for remote files.
+                    try {
+                        if (method_exists($disk, 'mimeType')) {
+                            $detected = $disk->mimeType($path);
+                            if (! empty($detected)) {
+                                $mime = $detected;
+                            }
+                        }
+                    } catch (\Throwable $_) {
+                        // ignore
+                    }
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore and fallback to octet-stream
+        }
+
+        // For Office documents (Word/Excel/PowerPoint) browsers typically
+        // force a download. Try to redirect to Google Docs Viewer which can
+        // render these formats inside the browser if the file is reachable
+        // by Google (i.e. public or temporary URL).
+        $officeExts = ['doc','docx','xls','xlsx','ppt','pptx'];
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+        if (in_array($ext, $officeExts, true)) {
+            try {
+                $publicUrl = null;
+
+                if (! empty($mf) && method_exists($mf, 'url')) {
+                    try {
+                        $publicUrl = $mf->url();
+                    } catch (\Throwable $_) {
+                        $publicUrl = null;
+                    }
+                }
+
+                // If we couldn't get a direct public URL, try generating a
+                // temporary URL from the storage disk (S3, etc.).
+                if (empty($publicUrl)) {
+                    try {
+                        if (method_exists(Storage::disk($mf->disk), 'temporaryUrl')) {
+                            $publicUrl = Storage::disk($mf->disk)->temporaryUrl($path, now()->addMinutes(10));
+                        }
+                    } catch (\Throwable $_) {
+                        $publicUrl = null;
+                    }
+                }
+
+                if (! empty($publicUrl)) {
+                    return redirect()->to('https://docs.google.com/gview?url=' . urlencode($publicUrl) . '&embedded=true');
+                }
+            } catch (\Throwable $_) {
+                // ignore and fall back to streaming
+            }
         }
 
         return response()->stream(function () use ($stream) {
             fpassthru($stream);
         }, 200, [
-            "Content-Type" => "application/octet-stream",
+            "Content-Type" => $mime,
             "Content-Disposition" => "inline; filename=\"" . basename($path) . "\""
         ]);
 
