@@ -152,3 +152,4 @@ interface LaratrustUser
      */
     public function allPermissions(?array $columns = null, mixed $team = false): Collection;
 }
+ 

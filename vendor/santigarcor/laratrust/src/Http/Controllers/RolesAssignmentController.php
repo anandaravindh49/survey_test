@@ -31,12 +31,28 @@ class RolesAssignmentController
             abort(404);
         }
 
+        $query = $userModel::query()
+            ->withCount(['roles', 'permissions']);
+
+        $search = $request->get('q');
+        if ($search) {
+            try {
+                $query->where(function ($qb) use ($search) {
+                    $qb->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            } catch (\Throwable $e) {
+                // If the model doesn't have name/email columns, ignore the search filter
+            }
+        }
+
+        $users = $query->simplePaginate(10);
+        $users->appends($request->only(['model', 'q']));
+
         return View::make('laratrust::panel.roles-assignment.index', [
             'models' => $modelsKeys,
             'modelKey' => $modelKey,
-            'users' => $userModel::query()
-                ->withCount(['roles', 'permissions'])
-                ->simplePaginate(10),
+            'users' => $users,
         ]);
     }
 

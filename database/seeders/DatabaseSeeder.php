@@ -30,5 +30,7 @@ class DatabaseSeeder extends Seeder
 
         // Seed blocks from Excel
         $this->call(BlockSeeder::class);
+
+        $this->call(LaratrustSeeder::class);
     }
 }

@@ -28,10 +28,18 @@ use App\Livewire\FileManager as FileManager;
 use App\Http\Controllers\FileManagerController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\RoleController;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
+Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+
+Route::get('/test', function () {
+    return "Working";
+});
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -84,6 +92,12 @@ Route::post('file-manager/upload', [FileManagerController::class, 'upload'])->na
 Route::get('file-manager/upload', function () {
     return redirect()->route('file-manager.index');
 })->name('file-manager.upload.redirect');
+
+Route::group(['middleware' => ['role:admin']], function () {
+    Route::get('/admin', function () {
+        return 'Admin panel';
+    });
+});
 
 Route::get('/file-view/{path}', function ($path) {
 
