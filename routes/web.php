@@ -107,6 +107,14 @@ Route::get('/file-view/{path}', function ($path) {
 
         $disk = Storage::disk('file_manager');
 
+        if (method_exists($disk, 'temporaryUrl')) {
+            try {
+                return redirect()->away($disk->temporaryUrl($path, now()->addMinutes(15)));
+            } catch (\Throwable $_) {
+                // fall back to server-streaming response if temporary URL cannot be generated.
+            }
+        }
+
         if (! $disk->exists($path)) {
             abort(404);
         }
@@ -119,7 +127,24 @@ Route::get('/file-view/{path}', function ($path) {
 
         // Determine a sensible MIME type so browsers will attempt to display
         // the file inline instead of forcing a download. Preference order:
-        // 1) stored ManagedFile->mime (if set and not generic)
+                $diskConfig = config('filesystems.disks.file_manager', []);
+                $driver = $diskConfig['driver'] ?? null;
+
+                if ($driver === 's3') {
+                    try {
+                        return redirect()->away($disk->temporaryUrl($path, now()->addMinutes(15)));
+                    } catch (\Throwable $_) {
+                        // Fallback to the existing stream path if temporary URL generation fails.
+                    }
+                }
+
+                if ($driver === 'local') {
+                    $localPath = $disk->path($path);
+                    if (file_exists($localPath)) {
+                        $mime = mime_content_type($localPath) ?: 'application/octet-stream';
+                        return response()->file($localPath, ['Content-Type' => $mime]);
+                    }
+                }
         // 2) guess from file extension
         // 3) fallback to application/octet-stream
         $mime = 'application/octet-stream';

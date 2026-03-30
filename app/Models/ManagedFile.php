@@ -13,6 +13,7 @@ class ManagedFile extends Model
     protected $fillable = [
         'name',
         'path',
+        'thumbnail_path',
         'disk',
         'size',
         'mime',

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Team;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -121,7 +123,7 @@ return [
         /**
          * Will be used only if the teams functionality is enabled.
          */
-        'team' => \App\Models\Team::class,
+        'team' => Team::class,
     ],
 
     /*
@@ -324,7 +326,9 @@ return [
         | These middleware will get added onto each Laratrust panel route.
         |
         */
-        'middleware' => ['web'],
+        // If you want to restrict to authenticated users only, keep `web`,`auth`,`verified`.
+        // To enforce admin role, keep `role:admin` if your auth user has this role.
+        'middleware' => ['web', 'auth', 'verified'],
 
         /*
         |--------------------------------------------------------------------------

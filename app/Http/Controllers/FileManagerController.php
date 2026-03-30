@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use App\Models\ManagedFile;
 
 class FileManagerController extends Controller
@@ -32,9 +34,19 @@ class FileManagerController extends Controller
         $disk = 'file_manager';
         $storage = Storage::disk($disk);
         $path = 'uploads/' . $filename;
+        $diskConfig = config('filesystems.disks.' . $disk, []);
+        $isLocal = ($diskConfig['driver'] ?? null) === 'local';
+        if ($isLocal) {
+            $publicUploadDir = public_path('uploads');
+            if (! File::exists($publicUploadDir)) {
+                File::makeDirectory($publicUploadDir, 0755, true);
+            }
+            $file->move($publicUploadDir, $filename);
+            $path = 'uploads/' . $filename;
+        }
 
         try {
-            if (in_array($diskConfig['driver'], ['s3', 's3v3', 's3-compat'], true)) {
+            if (! $isLocal && in_array($diskConfig['driver'], ['s3', 's3v3', 's3-compat'], true)) {
                 $realPath = $file->getRealPath() ?: $file->getPathname();
                 if ($realPath && file_exists($realPath)) {
                     $stream = fopen($realPath, 'r');
@@ -58,7 +70,7 @@ class FileManagerController extends Controller
                         throw new \RuntimeException('Uploaded file missing on local disk: ' . ($realPath ?: 'null'));
                     }
                 }
-            } else {
+            } elseif (! $isLocal) {
                 $stored = $storage->putFileAs('uploads', $file, $filename);
                 if ($stored) {
                     $path = $stored;
@@ -83,6 +95,40 @@ class FileManagerController extends Controller
         $size = $file->getSize() ?: 0;
         $mime = $file->getClientMimeType();
 
+        $thumbnailPath = null;
+        if (Str::startsWith($mime, 'image/') && ! Str::contains($mime, 'svg')) {
+            try {
+                $realPath = $file->getRealPath() ?: $file->getPathname();
+                if ($realPath && file_exists($realPath)) {
+                    $thumbFilename = 'thumb_' . $filename;
+                    $thumbTarget = 'uploads/thumbnails/' . $thumbFilename;
+                    if ($isLocal) {
+                        $thumbDir = public_path('uploads/thumbnails');
+                        if (! File::exists($thumbDir)) {
+                            File::makeDirectory($thumbDir, 0755, true);
+                        }
+                        $thumbAbs = $thumbDir . DIRECTORY_SEPARATOR . $thumbFilename;
+                        $this->generateImageThumbnail($realPath, $thumbAbs, null, true);
+                        $thumbnailPath = 'uploads/thumbnails/' . $thumbFilename;
+                    } else {
+                        $this->generateImageThumbnail($realPath, $thumbTarget, $disk);
+                        $thumbDir = public_path('uploads/thumbnails');
+                        if (! File::exists($thumbDir)) {
+                            File::makeDirectory($thumbDir, 0755, true);
+                        }
+                        $thumbAbs = $thumbDir . DIRECTORY_SEPARATOR . $thumbFilename;
+                        $this->generateImageThumbnail($realPath, $thumbAbs, null, true);
+                        $thumbnailPath = $thumbTarget;
+                    }
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::warning('FileManagerController: could not generate thumbnail', [
+                    'message' => $e->getMessage(),
+                    'mime' => $mime,
+                ]);
+            }
+        }
+
         if (! $path) {
             \Illuminate\Support\Facades\Log::error('FileManagerController: stored file path is empty after upload', ['filename' => $filename, 'disk_config' => $diskConfig]);
             return redirect()->back()->with('error', __('Upload failed: could not store the file. Check storage configuration.'));
@@ -92,6 +138,7 @@ class FileManagerController extends Controller
             ManagedFile::create([
                 'name' => $original,
                 'path' => $path,
+                'thumbnail_path' => $thumbnailPath,
                 'disk' => 'file_manager',
                 'size' => $size,
                 'mime' => $mime,
@@ -116,5 +163,66 @@ class FileManagerController extends Controller
         }
 
         return redirect()->back()->with('message', __('File uploaded successfully (fallback)'));
+    }
+
+    private function generateImageThumbnail(string $sourcePath, string $thumbTarget, string $disk = null): void
+    {
+        $info = getimagesize($sourcePath);
+        if (! $info) {
+            throw new \RuntimeException('Unable to obtain image metadata');
+        }
+
+        [$width, $height, $type] = $info;
+        if ($width <= 0 || $height <= 0) {
+            throw new \RuntimeException('Invalid image dimensions');
+        }
+
+        switch ($type) {
+            case IMAGETYPE_JPEG:
+                $sourceImage = imagecreatefromjpeg($sourcePath);
+                break;
+            case IMAGETYPE_PNG:
+                $sourceImage = imagecreatefrompng($sourcePath);
+                break;
+            case IMAGETYPE_GIF:
+                $sourceImage = imagecreatefromgif($sourcePath);
+                break;
+            default:
+                throw new \RuntimeException('Unsupported image type for thumbnail');
+        }
+
+        if (! $sourceImage) {
+            throw new \RuntimeException('Failed to create image resource');
+        }
+
+        $thumbWidth = 320;
+        $thumbHeight = (int) round($height * ($thumbWidth / $width));
+        $thumbImage = imagecreatetruecolor($thumbWidth, $thumbHeight);
+
+        if ($type === IMAGETYPE_PNG || $type === IMAGETYPE_GIF) {
+            imagealphablending($thumbImage, false);
+            imagesavealpha($thumbImage, true);
+            $transparent = imagecolorallocatealpha($thumbImage, 0, 0, 0, 127);
+            imagefilledrectangle($thumbImage, 0, 0, $thumbWidth, $thumbHeight, $transparent);
+        }
+
+        imagecopyresampled($thumbImage, $sourceImage, 0, 0, 0, 0, $thumbWidth, $thumbHeight, $width, $height);
+
+        ob_start();
+        imagejpeg($thumbImage, null, 75);
+        $jpegData = ob_get_clean();
+
+        imagedestroy($sourceImage);
+        imagedestroy($thumbImage);
+
+        if ($jpegData === false) {
+            throw new \RuntimeException('Failed to encode thumbnail');
+        }
+
+        if ($disk) {
+            Storage::disk($disk)->put($thumbTarget, $jpegData);
+        } else {
+            File::put($thumbTarget, $jpegData);
+        }
     }
 }

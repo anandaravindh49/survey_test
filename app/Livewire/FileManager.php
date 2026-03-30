@@ -7,6 +7,7 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\ManagedFile;
 
@@ -60,24 +61,53 @@ class FileManager extends Component
         $this->folders = $folders;
 
         $this->files = $items->map(function ($m) {
+            /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+            $disk = Storage::disk($m->disk);
+            $diskSettings = config('filesystems.disks.' . $m->disk, []);
+            $driver = $diskSettings['driver'] ?? null;
 
-    try {
-        // Generate direct file URL instead of signed URL
-        $downloadUrl = route('file-manager.view', base64_encode($m->path));
-    } catch (\Exception $e) {
-        Log::error('FileManager: failed to generate file URL', [
-            'path' => $m->path,
-            'disk' => $m->disk,
-            'message' => $e->getMessage(),
-        ]);
+            if (in_array($driver, ['s3', 's3v3', 's3-compat'], true)) {
+                $downloadUrl = null;
+                try {
+                    $downloadUrl = $disk->temporaryUrl($m->path, now()->addMinutes(60));
+                } catch (\Exception $e) {
+                    Log::warning('FileManager: could not generate temporary URL for content', ['path' => $m->path, 'disk' => $m->disk, 'error' => $e->getMessage()]);
+                    $downloadUrl = route('file-manager.view', base64_encode($m->path));
+                }
+            } elseif ($driver === 'local') {
+                $downloadUrl = url('/') . '/' . ltrim($m->path, '/');
+            } else {
+                $downloadUrl = route('file-manager.view', base64_encode($m->path));
+            }
 
-        $downloadUrl = null;
-    }
+            $thumbnailUrl = null;
+            if (! empty($m->thumbnail_path)) {
+                // Prefer local cache thumbnail when present (for mixed local/S3 sync behavior)
+                $localThumb = public_path('uploads/thumbnails/' . basename($m->thumbnail_path));
+                if (file_exists($localThumb)) {
+                    $thumbnailUrl = url('/') . '/uploads/thumbnails/' . basename($m->thumbnail_path);
+                } else {
+                if (in_array($driver, ['s3', 's3v3', 's3-compat'], true)) {
+                    try {
+                        $thumbnailUrl = $disk->temporaryUrl($m->thumbnail_path, now()->addMinutes(60));
+                    } catch (\Exception $e) {
+                        Log::warning('FileManager: could not generate temporary URL for thumbnail', ['path' => $m->thumbnail_path, 'disk' => $m->disk, 'error' => $e->getMessage()]);
+                        $thumbnailUrl = route('file-manager.view', base64_encode($m->thumbnail_path));
+                    }
+                } elseif ($driver === 'local') {
+                    $thumbnailUrl = url('/') . '/' . ltrim($m->thumbnail_path, '/');
+                } else {
+                    $thumbnailUrl = route('file-manager.view', base64_encode($m->thumbnail_path));
+                }
+                }
+            }
 
     return [
         'id' => $m->id,
         'name' => $m->name,
         'path' => $m->path,
+        'thumbnail_path' => $m->thumbnail_path,
+        'thumbnail_url' => $thumbnailUrl,
         'size' => $m->size,
         'mime' => $m->mime,
         'download_url' => $downloadUrl,
@@ -147,6 +177,16 @@ class FileManager extends Component
 
         $storage = Storage::disk($disk);
         $path = 'uploads/' . $filename;
+        $isLocal = ($diskConfig['driver'] === 'local');
+        if ($isLocal) {
+            $publicUploadDir = public_path('uploads');
+            if (! File::exists($publicUploadDir)) {
+                File::makeDirectory($publicUploadDir, 0755, true);
+            }
+            $targetFile = $publicUploadDir . DIRECTORY_SEPARATOR . $filename;
+            $this->upload->move($publicUploadDir, $filename);
+            $path = 'uploads/' . $filename;
+        }
 
         try {
             // For S3 / S3-compatible endpoints use a stream upload to avoid issues
@@ -205,6 +245,35 @@ class FileManager extends Component
         $size = $this->upload->getSize() ?: 0;
         $mime = $this->upload->getClientMimeType();
 
+        $thumbnailPath = null;
+        if (Str::startsWith($mime, 'image/') && ! Str::contains($mime, 'svg')) {
+            try {
+                $sourcePath = $this->upload->getRealPath() ?: $this->upload->getPathname();
+                if ($sourcePath && file_exists($sourcePath)) {
+                    $thumbFilename = 'thumb_' . $filename;
+                    $thumbTarget = 'uploads/thumbnails/' . $thumbFilename;
+                    if ($isLocal) {
+                        $thumbDir = public_path('uploads/thumbnails');
+                        if (! File::exists($thumbDir)) {
+                            File::makeDirectory($thumbDir, 0755, true);
+                        }
+                        $thumbAbs = $thumbDir . DIRECTORY_SEPARATOR . $thumbFilename;
+                        $this->generateImageThumbnail($sourcePath, $thumbAbs, null, true);
+                        $thumbnailPath = 'uploads/thumbnails/' . $thumbFilename;
+                    } else {
+                        $this->generateImageThumbnail($sourcePath, $thumbTarget, $disk);
+                        $thumbnailPath = $thumbTarget;
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::warning('FileManager: could not generate image thumbnail', [
+                    'message' => $e->getMessage(),
+                    'mime' => $mime,
+                    'path' => $path,
+                ]);
+            }
+        }
+
         // For local disks we can check existence reliably. Some S3-compatible
         // endpoints or drivers may throw on `exists()` (HEAD) immediately after
         // upload; treat a successful `put()` as success for S3-like drivers.
@@ -226,6 +295,7 @@ class FileManager extends Component
             ManagedFile::create([
                 'name' => $original,
                 'path' => $path,
+                'thumbnail_path' => $thumbnailPath,
                 'disk' => 'file_manager',
                 'size' => $size,
                 'mime' => $mime,
@@ -286,5 +356,68 @@ class FileManager extends Component
     public function render()
     {
         return view('livewire.file-manager');
+    }
+
+    private function generateImageThumbnail(string $sourcePath, string $thumbTarget, ?string $disk = null, bool $useAbsolute = false): void
+    {
+        $info = getimagesize($sourcePath);
+        if (! $info) {
+            throw new \RuntimeException('Unable to obtain image metadata');
+        }
+
+        [$width, $height, $type] = $info;
+        if ($width <= 0 || $height <= 0) {
+            throw new \RuntimeException('Invalid image dimensions');
+        }
+
+        switch ($type) {
+            case IMAGETYPE_JPEG:
+                $sourceImage = imagecreatefromjpeg($sourcePath);
+                break;
+            case IMAGETYPE_PNG:
+                $sourceImage = imagecreatefrompng($sourcePath);
+                break;
+            case IMAGETYPE_GIF:
+                $sourceImage = imagecreatefromgif($sourcePath);
+                break;
+            default:
+                throw new \RuntimeException('Unsupported image type for thumbnail');
+        }
+
+        if (! $sourceImage) {
+            throw new \RuntimeException('Failed to create image resource');
+        }
+
+        $thumbWidth = 320;
+        $thumbHeight = (int) round($height * ($thumbWidth / $width));
+        $thumbImage = imagecreatetruecolor($thumbWidth, $thumbHeight);
+
+        if ($type === IMAGETYPE_PNG || $type === IMAGETYPE_GIF) {
+            imagealphablending($thumbImage, false);
+            imagesavealpha($thumbImage, true);
+            $transparent = imagecolorallocatealpha($thumbImage, 0, 0, 0, 127);
+            imagefilledrectangle($thumbImage, 0, 0, $thumbWidth, $thumbHeight, $transparent);
+        }
+
+        imagecopyresampled($thumbImage, $sourceImage, 0, 0, 0, 0, $thumbWidth, $thumbHeight, $width, $height);
+
+        ob_start();
+        imagejpeg($thumbImage, null, 75);
+        $jpegData = ob_get_clean();
+
+        imagedestroy($sourceImage);
+        imagedestroy($thumbImage);
+
+        if ($jpegData === false) {
+            throw new \RuntimeException('Failed to encode thumbnail');
+        }
+
+        if ($useAbsolute) {
+            file_put_contents($thumbTarget, $jpegData);
+        } elseif ($disk !== null) {
+            Storage::disk($disk)->put($thumbTarget, $jpegData);
+        } else {
+            throw new \RuntimeException('No storage destination configured for thumbnail');
+        }
     }
 }
