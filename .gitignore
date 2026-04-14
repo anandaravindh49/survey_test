@@ -1,1 +1,13 @@
-node_modules
+node_modules/
+vendor/
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Build / hot reload artifacts
+public/hot
+
+# User uploads (optional; keep if you don't want uploads in git)
+public/uploads/
