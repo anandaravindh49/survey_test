@@ -11,3 +11,10 @@ public/hot
 
 # User uploads (optional; keep if you don't want uploads in git)
 public/uploads/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
