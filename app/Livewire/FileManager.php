@@ -67,17 +67,18 @@ class FileManager extends Component
             $driver = $diskSettings['driver'] ?? null;
 
             if (in_array($driver, ['s3', 's3v3', 's3-compat'], true)) {
-                $downloadUrl = null;
-                try {
-                    $downloadUrl = $disk->temporaryUrl($m->path, now()->addMinutes(60));
-                } catch (\Exception $e) {
-                    Log::warning('FileManager: could not generate temporary URL for content', ['path' => $m->path, 'disk' => $m->disk, 'error' => $e->getMessage()]);
-                    $downloadUrl = route('file-manager.view', base64_encode($m->path));
+                // Prefer local cache copy when available for reliable previews.
+                $localOriginal = public_path(ltrim($m->path, '/'));
+                if (file_exists($localOriginal)) {
+                    $downloadUrl = '/' . ltrim($m->path, '/');
+                } else {
+                    // Fallback to app proxy route for remote content.
+                    $downloadUrl = route('file-manager.view', ['path' => base64_encode($m->path)], false);
                 }
             } elseif ($driver === 'local') {
-                $downloadUrl = url('/') . '/' . ltrim($m->path, '/');
+                $downloadUrl = '/' . ltrim($m->path, '/');
             } else {
-                $downloadUrl = route('file-manager.view', base64_encode($m->path));
+                $downloadUrl = route('file-manager.view', ['path' => base64_encode($m->path)], false);
             }
 
             $thumbnailUrl = null;
@@ -85,19 +86,14 @@ class FileManager extends Component
                 // Prefer local cache thumbnail when present (for mixed local/S3 sync behavior)
                 $localThumb = public_path('uploads/thumbnails/' . basename($m->thumbnail_path));
                 if (file_exists($localThumb)) {
-                    $thumbnailUrl = url('/') . '/uploads/thumbnails/' . basename($m->thumbnail_path);
+                    $thumbnailUrl = '/uploads/thumbnails/' . basename($m->thumbnail_path);
                 } else {
                 if (in_array($driver, ['s3', 's3v3', 's3-compat'], true)) {
-                    try {
-                        $thumbnailUrl = $disk->temporaryUrl($m->thumbnail_path, now()->addMinutes(60));
-                    } catch (\Exception $e) {
-                        Log::warning('FileManager: could not generate temporary URL for thumbnail', ['path' => $m->thumbnail_path, 'disk' => $m->disk, 'error' => $e->getMessage()]);
-                        $thumbnailUrl = route('file-manager.view', base64_encode($m->thumbnail_path));
-                    }
+                    $thumbnailUrl = route('file-manager.view', ['path' => base64_encode($m->thumbnail_path)], false);
                 } elseif ($driver === 'local') {
-                    $thumbnailUrl = url('/') . '/' . ltrim($m->thumbnail_path, '/');
+                    $thumbnailUrl = '/' . ltrim($m->thumbnail_path, '/');
                 } else {
-                    $thumbnailUrl = route('file-manager.view', base64_encode($m->thumbnail_path));
+                    $thumbnailUrl = route('file-manager.view', ['path' => base64_encode($m->thumbnail_path)], false);
                 }
                 }
             }
@@ -239,6 +235,27 @@ class FileManager extends Component
 
             session()->flash('error', __('Upload failed: storage exception occurred. Check logs for details.'));
             return;
+        }
+
+        // Keep a local public cache copy even when the primary disk is remote.
+        if (! $isLocal) {
+            try {
+                $publicUploadDir = public_path('uploads');
+                if (! File::exists($publicUploadDir)) {
+                    File::makeDirectory($publicUploadDir, 0755, true);
+                }
+
+                $sourcePath = $this->upload->getRealPath() ?: $this->upload->getPathname();
+                if ($sourcePath && file_exists($sourcePath)) {
+                    File::copy($sourcePath, $publicUploadDir . DIRECTORY_SEPARATOR . $filename);
+                }
+            } catch (\Throwable $e) {
+                Log::warning('FileManager: failed to create local cache copy', [
+                    'message' => $e->getMessage(),
+                    'path' => $path,
+                    'filename' => $filename,
+                ]);
+            }
         }
 
         // Prefer the uploaded file's reported size to avoid relying on remote metadata

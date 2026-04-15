@@ -107,19 +107,14 @@ Route::get('/file-view/{path}', function ($path) {
 
         $disk = Storage::disk('file_manager');
 
-        if (method_exists($disk, 'temporaryUrl')) {
-            try {
-                return redirect()->away($disk->temporaryUrl($path, now()->addMinutes(15)));
-            } catch (\Throwable $_) {
-                // fall back to server-streaming response if temporary URL cannot be generated.
-            }
+        // Some S3-compatible drivers may throw on exists()/HEAD checks even when
+        // the object is readable via GET. Prefer attempting readStream directly.
+        $stream = null;
+        try {
+            $stream = $disk->readStream($path);
+        } catch (\Throwable $_) {
+            $stream = null;
         }
-
-        if (! $disk->exists($path)) {
-            abort(404);
-        }
-
-        $stream = $disk->readStream($path);
 
         if (! $stream) {
             abort(404);
@@ -129,14 +124,6 @@ Route::get('/file-view/{path}', function ($path) {
         // the file inline instead of forcing a download. Preference order:
                 $diskConfig = config('filesystems.disks.file_manager', []);
                 $driver = $diskConfig['driver'] ?? null;
-
-                if ($driver === 's3') {
-                    try {
-                        return redirect()->away($disk->temporaryUrl($path, now()->addMinutes(15)));
-                    } catch (\Throwable $_) {
-                        // Fallback to the existing stream path if temporary URL generation fails.
-                    }
-                }
 
                 if ($driver === 'local') {
                     $localPath = $disk->path($path);
