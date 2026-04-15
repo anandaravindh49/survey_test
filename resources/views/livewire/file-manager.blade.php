@@ -45,8 +45,8 @@
             <div class="mt-4">
                 <h4 class="text-xs font-semibold text-gray-500 dark:text-gray-400">{{ __('Quick Stats') }}</h4>
                 @php
-                    $totalFiles = \App\Models\ManagedFile::count();
-                    $totalSize = \App\Models\ManagedFile::sum('size');
+                    $totalFiles = \App\Models\FileManager::count();
+                    $totalSize = \App\Models\FileManager::sum('size');
                 @endphp
                 <div class="mt-2 grid grid-cols-2 gap-2">
                     <div class="rounded-xl bg-emerald-50 px-3 py-2 ring-1 ring-inset ring-emerald-200 dark:bg-emerald-500/10 dark:ring-emerald-500/20">

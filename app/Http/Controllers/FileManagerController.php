@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use App\Models\ManagedFile;
+use App\Models\FileManager;
 
 class FileManagerController extends Controller
 {
@@ -161,7 +161,7 @@ class FileManagerController extends Controller
             }
 
             try {
-                ManagedFile::create([
+                FileManager::create([
                     'name' => $original,
                     'path' => $path,
                     'thumbnail_path' => $thumbnailPath,
@@ -171,7 +171,7 @@ class FileManagerController extends Controller
                     'user_id' => Auth::id(),
                 ]);
             } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('FileManagerController: failed to create ManagedFile record', [
+                \Illuminate\Support\Facades\Log::error('FileManagerController: failed to create FileManager record', [
                     'message' => $e->getMessage(),
                     'exception' => get_class($e),
                     'path' => $path,

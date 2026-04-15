@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use App\Models\ManagedFile;
+use App\Models\FileManager as FileManagerModel;
 
 class FileManager extends Component
 {
@@ -30,7 +30,7 @@ class FileManager extends Component
 
     public function loadFiles()
     {
-        $query = ManagedFile::query();
+        $query = FileManagerModel::query();
 
         if ($this->filterFolder) {
             // folder '.' means root uploads folder
@@ -49,7 +49,7 @@ class FileManager extends Component
         $items = $query->orderBy('created_at', 'desc')->get();
 
         // compute folders from all paths (top-level segment)
-        $allPaths = ManagedFile::pluck('path')->toArray();
+        $allPaths = FileManagerModel::pluck('path')->toArray();
         $folders = collect($allPaths)->map(function ($p) {
             // normalize: take first segment
             if (Str::contains($p, '/')) {
@@ -309,7 +309,7 @@ class FileManager extends Component
         }
 
         try {
-            ManagedFile::create([
+            FileManagerModel::create([
                 'name' => $original,
                 'path' => $path,
                 'thumbnail_path' => $thumbnailPath,
@@ -319,7 +319,7 @@ class FileManager extends Component
                 'user_id' => Auth::id(),
             ]);
         } catch (\Exception $e) {
-            Log::error('FileManager: failed to create ManagedFile record', [
+            Log::error('FileManager: failed to create FileManager record', [
                 'message' => $e->getMessage(),
                 'exception' => get_class($e),
                 'path' => $path,
@@ -345,7 +345,7 @@ class FileManager extends Component
 
     public function deleteFile($id)
     {
-        $m = ManagedFile::find($id);
+        $m = FileManagerModel::find($id);
         if (! $m) {
             return;
         }

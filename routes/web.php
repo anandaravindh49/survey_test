@@ -137,7 +137,7 @@ Route::get('/file-view/{path}', function ($path) {
         $mime = 'application/octet-stream';
 
         try {
-            $mf = \App\Models\ManagedFile::where('path', $path)->first();
+            $mf = \App\Models\FileManager::where('path', $path)->first();
             if ($mf && ! empty($mf->mime) && $mf->mime !== 'application/octet-stream') {
                 $mime = $mf->mime;
             } else {
