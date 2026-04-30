@@ -10,11 +10,15 @@ class Edit extends Component
 {
     public Machine $machine;
     public $package_name = '';
-    public $state_name = '';
+    public $machine_state = '';
     public $business_area = '';
-    public $district_name = '';
-    public $block_name = '';
-    public $machine_name = '';
+    public $machine_district = '';
+    public $machine_block = '';
+    public $make = '';
+    public $serial_no = '';
+    public $operator_name = '';
+    public $mobile = '';
+    public $operator_id = '';
     public $machine_type = '';
     public $code = '';
     public $status = 'ACTIVE';
@@ -23,11 +27,15 @@ class Edit extends Component
     {
         $this->machine = $machine;
         $this->package_name = $machine->package_name;
-        $this->state_name = $machine->state_name;
+        $this->machine_state = $machine->machine_state;
         $this->business_area = $machine->business_area;
-        $this->district_name = $machine->district_name;
-        $this->block_name = $machine->block_name;
-        $this->machine_name = $machine->machine_name;
+        $this->machine_district = $machine->machine_district;
+        $this->machine_block = $machine->machine_block;
+        $this->make = $machine->make;
+        $this->serial_no = $machine->serial_no;
+        $this->operator_name = $machine->operator_name;
+        $this->mobile = $machine->mobile;
+        $this->operator_id = $machine->operator_id;
         $this->machine_type = $machine->machine_type;
         $this->code = $machine->code;
         $this->status = $machine->status;
@@ -37,11 +45,15 @@ class Edit extends Component
     {
         $this->validate([
             'package_name' => 'required|string',
-            'state_name' => 'required|string',
+            'machine_state' => 'required|string',
             'business_area' => 'nullable|string',
-            'district_name' => 'required|string',
-            'block_name' => 'required|string',
-            'machine_name' => 'required|string',
+            'machine_district' => 'required|string',
+            'machine_block' => 'required|string',
+            'make' => 'required|string',
+            'serial_no' => 'nullable|string',
+            'operator_name' => 'nullable|string',
+            'mobile' => 'nullable|string',
+            'operator_id' => 'nullable|string',
             'machine_type' => 'nullable|string',
             'code' => 'required|string|unique:machines,code,' . $this->machine->id,
             'status' => 'required|in:ACTIVE,INACTIVE',
@@ -49,11 +61,15 @@ class Edit extends Component
 
         $this->machine->update([
             'package_name' => $this->package_name,
-            'state_name' => $this->state_name,
+            'machine_state' => $this->machine_state,
             'business_area' => $this->business_area,
-            'district_name' => $this->district_name,
-            'block_name' => $this->block_name,
-            'machine_name' => $this->machine_name,
+            'machine_district' => $this->machine_district,
+            'machine_block' => $this->machine_block,
+            'make' => $this->make,
+            'serial_no' => $this->serial_no,
+            'operator_name' => $this->operator_name,
+            'mobile' => $this->mobile,
+            'operator_id' => $this->operator_id,
             'machine_type' => $this->machine_type,
             'code' => $this->code,
             'status' => $this->status,

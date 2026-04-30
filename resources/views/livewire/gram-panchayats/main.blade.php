@@ -1,15 +1,35 @@
 <div>
-    <div class="mb-6 flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ __('Gram Panchayats') }}</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ __('Manage gram panchayats across states, business areas, districts and blocks') }}</p>
+    <div class="mb-4">
+        <div class="flex items-center justify-between">
+            <div>
+                <nav class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                    <a href="#" class="mr-2">Home</a>
+                    <span class="text-zinc-400">/</span>
+                    <span class="ml-2">{{ __('Gram Panchayat') }}</span>
+                </nav>
+                <div class="flex items-baseline gap-3">
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ __('Gram Panchayat') }}</h1>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">(Master)</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <input
+                        wire:model.live="search"
+                        type="search"
+                        placeholder="{{ __('search GP...') }}"
+                        class="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-200 w-64"
+                    />
+                </div>
+                <div class="relative">
+                    <a href="{{ route('gram-panchayats.export') }}" class="inline-flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-md">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"/></svg>
+                        <span class="text-sm">{{ __('Download') }}</span>
+                    </a>
+                </div>
+            </div>
         </div>
-        <a href="{{ route('gram-panchayats.create') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 dark:bg-zinc-700 text-white rounded-lg hover:bg-zinc-900 dark:hover:bg-zinc-600 font-medium transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            {{ __('Add Gram Panchayat') }}
-        </a>
     </div>
 
     @if (session()->has('message'))
@@ -93,86 +113,33 @@
     </div>
 
     <!-- Filter Section -->
-    <div class="mb-6 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
-        <div class="flex gap-2 items-center mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-            <button
-                wire:click="resetFilters"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors"
-            >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                </svg>
-                {{ __('Reset') }}
-            </button>
-            {{-- <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('Filter by:') }}</span> --}}
-        </div>
-        
-        <div class="flex flex-wrap gap-3">
-            <input
-                wire:model.live="search"
-                type="search"
-                placeholder="{{ __('search GP...') }}"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-64"
-            />
-            
-            <select
-                wire:model.live="filterState"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
-            >
-                <option value="">{{ __('All States') }}</option>
-                @foreach($states as $state)
-                    <option value="{{ $state }}">{{ $state }}</option>
-                @endforeach
-            </select>
-            
-            <select
-                wire:model.live="filterBusinessArea"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
-            >
-                <option value="">{{ __('All Business Areas') }}</option>
-                @foreach($businessAreas as $ba)
-                    <option value="{{ $ba }}">{{ $ba }}</option>
-                @endforeach
-            </select>
+    <div class="mb-6">
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+            <div class="flex items-center gap-3">
+                <a href="{{ route('gram-panchayats.create') }}" class="flex items-center justify-center w-12 h-12 bg-black text-white rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </a>
 
-            <select
-                wire:model.live="filterDistrict"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
-            >
-                <option value="">{{ __('All Districts') }}</option>
-                @foreach($districts as $district)
-                    <option value="{{ $district }}">{{ $district }}</option>
-                @endforeach
-            </select>
+                <button wire:click="resetFilters" class="inline-flex items-center justify-center w-10 h-10 bg-white border border-gray-200 rounded-full">
+                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9"/></svg>
+                </button>
 
-            <select
-                wire:model.live="filterBlock"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
-            >
-                <option value="">{{ __('All Blocks') }}</option>
-                @foreach($blocks as $block)
-                    <option value="{{ $block }}">{{ $block }}</option>
-                @endforeach
-            </select>
+                <div class="flex-1 flex items-center gap-3">
+                    <select wire:model.live="filterState" class="rounded-md px-3 py-2 border border-gray-200 w-48 text-sm">
+                        <option value="">{{ __('All States') }}</option>
+                        @foreach($states as $state)
+                            <option value="{{ $state }}">{{ $state }}</option>
+                        @endforeach
+                    </select>
 
-            <select
-                wire:model.live="filterGpType"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
-            >
-                <option value="">{{ __('All GP Types') }}</option>
-                @foreach($gpTypes as $type)
-                    <option value="{{ $type }}">{{ $type }}</option>
-                @endforeach
-            </select>
-            
-            <select
-                wire:model.live="filterStatus"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-2.5 py-1.5 pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-40"
-            >
-                <option value="">{{ __('All Status') }}</option>
-                <option value="ACTIVE">{{ __('Active') }}</option>
-                <option value="INACTIVE">{{ __('Inactive') }}</option>
-            </select>
+                    <select wire:model.live="filterBusinessArea" class="rounded-md px-3 py-2 border border-gray-200 w-48 text-sm">
+                        <option value="">{{ __('All Business Areas') }}</option>
+                        @foreach($businessAreas as $ba)
+                            <option value="{{ $ba }}">{{ $ba }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
 

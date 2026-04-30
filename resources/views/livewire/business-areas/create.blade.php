@@ -88,21 +88,15 @@
             </div>
 
             <!-- Buttons -->
-            <div class="flex gap-4 pt-4">
-                <button 
-                    type="submit"
-                    class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
-                >
-                    {{ __('Create Business Area') }}
-                </button>
-                <a 
-                    href="{{ route('business-areas.index') }}" 
-                    wire:navigate
-                    class="flex-1 px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-200 text-center"
-                >
-                    {{ __('Cancel') }}
-                </a>
-            </div>
+            <div class="flex justify-end gap-2 mt-6">
+            
+            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-medium">
+                {{ __('Create BA') }}
+            </button>
+            <a href="{{ route('business-areas.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 font-medium">
+                {{ __('Cancel') }}
+            </a>
+        </div>
         </form>
     </div>
 </div>

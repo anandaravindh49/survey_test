@@ -171,7 +171,7 @@
                     type="submit"
                     class="px-6 py-2 bg-black dark:bg-gray-900 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-800 font-medium transition-colors text-sm"
                 >
-                    {{ __('Yeah, Submit') }}
+                    {{ __('Create User') }}
                 </button>
             </div>
         </form>

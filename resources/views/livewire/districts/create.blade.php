@@ -7,6 +7,7 @@
             Back to Districts
         </a>
         <h1 class="text-4xl font-bold text-gray-900 dark:text-white">{{ __('Create District') }}</h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-2">{{ __('Add a new District to the system') }}</p>
     </div>
 
     <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-md p-8 border border-slate-200 dark:border-slate-700">
@@ -105,16 +106,9 @@
             </div>
 
             <!-- Buttons -->
-            <div class="flex items-center gap-4 pt-4">
-                <button 
-                    type="submit"
-                    class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
-                >
-                    <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                    Create District
-                </button>
+           <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-medium">
+                {{ __('Create District') }}
+            </button>
                 <a 
                     href="{{ route('districts.index') }}" 
                     wire:navigate

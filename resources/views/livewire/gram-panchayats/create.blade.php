@@ -1,9 +1,12 @@
-<div>
-    <div class="mb-6 flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ __('Create Gram Panchayat') }}</h1>
-        <a href="{{ route('gram-panchayats.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 font-medium">
-            {{ __('Back') }}
-        </a>
+<div class="p-8">
+    <div class="mb-8">
+        <div class="flex items-center gap-4">
+            <a href="{{ route('gram-panchayats.index') }}" wire:navigate class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
+                ← Back to Gram Panchayats
+            </a>
+        </div>
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mt-4">{{ __('Create Gram Panchayats') }}</h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-2">{{ __('Add a new Gram Panchayat to the system') }}</p>
     </div>
 
     <form wire:submit="save" class="bg-white dark:bg-gray-900 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6">
@@ -86,12 +89,13 @@
         </div>
 
         <div class="flex justify-end gap-2 mt-6">
+            
+            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-medium">
+                {{ __('Create GP') }}
+            </button>
             <a href="{{ route('gram-panchayats.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 font-medium">
                 {{ __('Cancel') }}
             </a>
-            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 dark:bg-zinc-700 text-white rounded hover:bg-zinc-900 dark:hover:bg-zinc-600 font-medium">
-                {{ __('Create Gram Panchayat') }}
-            </button>
         </div>
     </form>
 </div>

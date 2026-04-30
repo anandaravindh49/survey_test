@@ -55,30 +55,35 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Business Areas Routes
     Route::get('business-areas', BusinessAreasMain::class)->name('business-areas.index');
     Route::get('business-areas/create', BusinessAreasCreate::class)->name('business-areas.create');
+    Route::get('business-areas/export', [\App\Http\Controllers\BusinessAreaExportController::class, 'export'])->name('business-areas.export');
     Route::get('business-areas/{businessArea}', BusinessAreasShow::class)->name('business-areas.show');
     Route::get('business-areas/{businessArea}/edit', BusinessAreasEdit::class)->name('business-areas.edit');
 
     // Districts Routes
     Route::get('districts', DistrictsMain::class)->name('districts.index');
     Route::get('districts/create', DistrictsCreate::class)->name('districts.create');
+    Route::get('districts/export', [\App\Http\Controllers\DistrictExportController::class, 'export'])->name('districts.export');
     Route::get('districts/{district}', DistrictsShow::class)->name('districts.show');
     Route::get('districts/{district}/edit', DistrictsEdit::class)->name('districts.edit');
 
     // Blocks Routes
     Route::get('blocks', BlocksMain::class)->name('blocks.index');
     Route::get('blocks/create', BlocksCreate::class)->name('blocks.create');
+    Route::get('blocks/export', [\App\Http\Controllers\BlockExportController::class, 'export'])->name('blocks.export');
     Route::get('blocks/{block}', BlocksShow::class)->name('blocks.show');
     Route::get('blocks/{block}/edit', BlocksEdit::class)->name('blocks.edit');
 
     // Machines Routes
     Route::get('machines', MachinesMain::class)->name('machines.index');
     Route::get('machines/create', MachinesCreate::class)->name('machines.create');
+    Route::get('machines/export', [\App\Http\Controllers\MachineExportController::class, 'export'])->name('machines.export');
     Route::get('machines/{machine}', MachinesShow::class)->name('machines.show');
     Route::get('machines/{machine}/edit', MachinesEdit::class)->name('machines.edit');
 
     // Gram Panchayats Routes
     Route::get('gram-panchayats', GramPanchayatsMain::class)->name('gram-panchayats.index');
     Route::get('gram-panchayats/create', GramPanchayatsCreate::class)->name('gram-panchayats.create');
+    Route::get('gram-panchayats/export', [\App\Http\Controllers\GramPanchayatExportController::class, 'export'])->name('gram-panchayats.export');
     Route::get('gram-panchayats/{gramPanchayat}', GramPanchayatsShow::class)->name('gram-panchayats.show');
     Route::get('gram-panchayats/{gramPanchayat}/edit', GramPanchayatsEdit::class)->name('gram-panchayats.edit');
     
